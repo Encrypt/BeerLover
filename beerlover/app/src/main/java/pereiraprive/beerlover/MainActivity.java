@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.content.Intent;
 
 
 public class MainActivity extends Activity {
@@ -20,7 +21,8 @@ public class MainActivity extends Activity {
     public void displayBeerList(View v) {
 
         // Displays the list of the beers
-        setContentView(R.layout.beer_list);
+        Intent i = new Intent(getApplicationContext(), BeerList.class);
+        startActivity(i);
     }
 
     // Function to go to the bookmarked beers
