@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
 
 public class MainActivity extends Activity {
@@ -14,6 +16,19 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
     }
 
+    // Function to go to the list of beers
+    public void displayBeerList(View v) {
+
+        // Displays the list of the beers
+        setContentView(R.layout.beer_list);
+    }
+
+    // Function to go to the bookmarked beers
+    public void displayBookmarks(View v){
+
+        // Creates a toast to test
+        Toast.makeText(getApplicationContext(), "THE GAME", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
