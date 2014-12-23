@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">beerlover</string>
+    <string name="app_name">BeerLover</string>
     <string name="welcomeText">Bienvenue sur BeerLover !</string>
     <string name="fiveLastText">Nos 5 dernières découvertes :</string>
     <string name="listButtonText">Accéder à la liste</string>
