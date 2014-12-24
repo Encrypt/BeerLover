@@ -20,7 +20,7 @@ public class MainActivity extends ActionBarActivity {
     public void displayBeerList(View v) {
 
         // Displays the list of the beers
-        Intent i = new Intent(getApplicationContext(), BeerList.class);
+        Intent i = new Intent(getApplicationContext(), BeerDescription.class);
         startActivity(i);
     }
 

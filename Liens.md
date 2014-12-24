@@ -7,3 +7,6 @@ http://www.iconsdb.com/orange-icons/beer-icon.html
 # Icônes étoile
 http://donnezvotreavis.net/windowsmoviemaker/avisimg/etoile_pleine.png
 http://donnezvotreavis.net/windowsmoviemaker/avisimg/etoile_vide.png
+
+# Pas d'image
+http://img2.wikia.nocookie.net/__cb20130511180903/legendmarielu/images/b/b4/No_image_available.jpg
