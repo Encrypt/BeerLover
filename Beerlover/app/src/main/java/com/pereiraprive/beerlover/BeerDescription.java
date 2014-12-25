@@ -7,12 +7,13 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.view.View.OnClickListener;
+import android.widget.TextView;
 
 public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
     private boolean isBookmarked = true;
-    private String description, origin, drinker;
+    private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
 
@@ -24,6 +25,10 @@ public class BeerDescription extends ActionBarActivity {
         setContentView(R.layout.beer_description);
 
         // Retrieves the objects
+        name = (TextView) findViewById(R.id.beerName);
+        description = (TextView) findViewById(R.id.beerDescription);
+        origin = (TextView) findViewById(R.id.beerOrigin);
+        drinker = (TextView) findViewById(R.id.beerDrinker);
         bookmarkButton = (ImageButton) findViewById(R.id.starButton);
         beerImage = (ImageView) findViewById(R.id.beerImage);
 
@@ -44,7 +49,6 @@ public class BeerDescription extends ActionBarActivity {
 
     // Method called to retrieve and set the different elements in teh view
     private void fillView() {
-        beerImage.setImageResource(R.drawable.no_image);
 
     }
 
@@ -54,12 +58,29 @@ public class BeerDescription extends ActionBarActivity {
         // If the beer is bookmarked
         if (isBookmarked) {
 
+            // Changes the bookmark value
+            isBookmarked = false;
+
             // Changes the background image
             bookmarkButton.setBackgroundResource(R.drawable.empty_star);
 
             // Removes the bookmark in the database
             // TODO
 
+
+        }
+
+        // Else, the beer is not bookmarked
+        else {
+
+            // Changes the bookmark value
+            isBookmarked = true;
+
+            // Changes the background image
+            bookmarkButton.setBackgroundResource(R.drawable.filled_star);
+
+            // Adds the bookmark in the database
+            // TODO
 
         }
 
