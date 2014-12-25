@@ -35,17 +35,17 @@
         android:layout_height="wrap_content"
         android:text="@string/listButtonText"
         android:id="@+id/button1"
-        android:onClick="displayBeerList"
         android:layout_below="@+id/fiveLastBeers"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="displayBeerList" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/ownListButtonText"
         android:id="@+id/button2"
-        android:onClick="displayBookmarks"
         android:layout_below="@+id/button1"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:onClick="displayBookmarks" />
 
 </RelativeLayout>
