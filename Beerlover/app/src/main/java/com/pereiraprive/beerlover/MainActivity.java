@@ -13,6 +13,7 @@ public class MainActivity extends ActionBarActivity {
 
     // Needed variables for this view
     private ListView fiveLastBeers;
+    private DownloadTask dlTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +40,13 @@ public class MainActivity extends ActionBarActivity {
     // Method to go to the bookmarked beers
     public void displayBookmarks(View v){
 
+
+    }
+
+    // Method top fill the 5 last beer discoveries
+    private void fillView() {
+
+        // Retrieves beers
         String webContent = "Toto";
 
         // Create a DownloadTask
@@ -58,16 +66,22 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
+        // Creates the JSON Object
+        JSONObject myjsonobject;
+        String stringJson = new String();
 
+        // Fills the JSON Object
+        try {
+            myjsonobject = new JSONObject(result);
+            stringJson = myjsonobject.toString();
+        }
+        catch(JSONException e){
+            // Nothing
+        }
 
-        // Creates a toast to test
-        Toast.makeText(getApplicationContext(), webContent, Toast.LENGTH_SHORT).show();
-    }
-
-    // Method top fill the 5 last beer discoveries
-    private void fillView() {
-
-        // TODO
+        // Sets the text
+        textElement.setText(stringJson);
+        
     }
 
     /*
