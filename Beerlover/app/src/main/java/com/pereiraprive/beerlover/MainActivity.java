@@ -55,13 +55,14 @@ public class MainActivity extends ActionBarActivity {
         // Local objects
         String webContent = "Toto", stringJson;
         DownloadTask dlTask;
-        JSONObject webJson;
+        JSONObject webJson = null;
         ArrayAdapter<String> randomAdapter;
         ArrayList<String> randomList;
+        int randomBeer;
 
         // Create a DownloadTask & downloads content
         dlTask = new DownloadTask();
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/countries.json");
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/142.json");
 
         // Retrieves the content
         try {
@@ -80,9 +81,19 @@ public class MainActivity extends ActionBarActivity {
             // Nothing
         }
 
+        randomBeer = 1 + (int)(Math.random() * (151 - 1));
+
+        try {
+            stringJson = (String) webJson.get("name");
+        }
+        catch(JSONException e) {
+
+        }
+
+
         // Parse the JSON
         randomList = new ArrayList<String>();
-        randomList.add("Truc");
+        randomList.add(stringJson);
         randomList.add("Machin");
         randomList.add("Chose");
         randomList.add("Biniou");
@@ -90,6 +101,20 @@ public class MainActivity extends ActionBarActivity {
         randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
 
         fiveLastBeers.setAdapter(randomAdapter);
+
+    }
+
+    // Method to generate a random beer
+    public String randomBeer() {
+
+        // Local variables
+        int randomNumber;
+
+        // Generate a random int
+        randomNumber = 1 + (int)(Math.random() * (151 - 1));
+
+        // Gets the beer
+        return "Bidule";
 
     }
 
