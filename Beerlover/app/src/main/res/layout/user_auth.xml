@@ -8,7 +8,7 @@
         android:layout_height="wrap_content"
         android:inputType="textEmailAddress"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/email"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="138dp"
@@ -20,7 +20,7 @@
         android:inputType="textPersonName"
         android:text="Nickname"
         android:ems="10"
-        android:id="@+id/editText2"
+        android:id="@+id/nickname"
         android:layout_below="@+id/editText"
         android:layout_alignLeft="@+id/editText"
         android:layout_alignStart="@+id/editText" />
