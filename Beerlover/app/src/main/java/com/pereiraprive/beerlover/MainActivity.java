@@ -46,7 +46,9 @@ public class MainActivity extends ActionBarActivity {
     private void fillRandomList() {
 
         // Local objects
-        int randomNumber;
+        int randomNumber, j;
+        int randomNumbers[] = new int[5];
+        Boolean alreadyExists = false;
         String webContent = null;
         JSONObject webJson = null;
         DownloadTask dlTask;
@@ -55,14 +57,24 @@ public class MainActivity extends ActionBarActivity {
         ListView fiveRandomBeers = (ListView) findViewById(R.id.fiveRandomBeers);
         String randomBeerName = new String();
 
+        // Generates random numbers
+        for(int i = 1; i <= 5 ; i++) {
+
+            // Reset boolean
+            alreadyExists = true;
+
+            while(alreadyExists) {
+
+            }
+            // Generates a random number
+            randomNumber = 1 + (int)(Math.random() * (151 - 1));
+        }
+
         // Populates the ListView
         for(int i = 1 ; i <= 5 ; i++) {
 
             // Creates a new download task
             dlTask = new DownloadTask();
-
-            // Generates a random number
-            randomNumber = 1 + (int)(Math.random() * (151 - 1));
 
             // Retrieves the associated beer
             dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + randomNumber +".json");
@@ -91,9 +103,8 @@ public class MainActivity extends ActionBarActivity {
 
         }
 
-        // Finally,
+        // Finally, sets the List in the ListView
         randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
-
         fiveRandomBeers.setAdapter(randomAdapter);
 
     }
