@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
     private void fillRandomList() {
 
         // Local objects
-        int randomNumber, j;
+        int randomNumber;
         int randomNumbers[] = new int[5];
         Boolean alreadyExists = false;
         String webContent = null;
@@ -57,24 +57,40 @@ public class MainActivity extends ActionBarActivity {
         ListView fiveRandomBeers = (ListView) findViewById(R.id.fiveRandomBeers);
         String randomBeerName = new String();
 
-        // Generates random numbers
-        for(int i = 1; i <= 5 ; i++) {
+        // Generates random numbers (o avoid duplicates)
+        for(int i = 0; i < 5 ; i++) {
 
-            // Reset boolean
-            alreadyExists = true;
+            // Reset the boolean
+            alreadyExists = false;
 
-            while(alreadyExists) {
+            do {
 
-            }
-            // Generates a random number
-            randomNumber = 1 + (int)(Math.random() * (151 - 1));
+                // Generates a random number
+                randomNumber = 1 + (int)(Math.random() * (151 - 1));
+
+                // Checks if it already exists in the list
+                for(int j = 0 ; j <= i ; j++) {
+
+                    if(randomNumbers[j] == randomNumber)
+                        alreadyExists = true;
+
+                    else
+                        alreadyExists = false;
+                }
+
+            } while(alreadyExists);
+
+            // Else, adds the number in the list
+            randomNumbers[i] = randomNumber;
+
         }
 
         // Populates the ListView
-        for(int i = 1 ; i <= 5 ; i++) {
+        for(int i = 0 ; i < 5 ; i++) {
 
-            // Creates a new download task
+            // Creates a new download task with the appropriate random value
             dlTask = new DownloadTask();
+            randomNumber = randomNumbers[i];
 
             // Retrieves the associated beer
             dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + randomNumber +".json");
