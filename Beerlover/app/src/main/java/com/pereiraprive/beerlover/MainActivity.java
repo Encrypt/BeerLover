@@ -3,10 +3,16 @@ package com.pereiraprive.beerlover;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends ActionBarActivity {
@@ -46,42 +52,45 @@ public class MainActivity extends ActionBarActivity {
     // Method top fill the 5 last beer discoveries
     private void fillView() {
 
-        // Retrieves beers
-        String webContent = "Toto";
+        // Local objects
+        String webContent = "Toto", stringJson;
+        DownloadTask dlTask;
+        JSONObject webJson;
+        ArrayAdapter<String> randomAdapter;
+        ArrayList<String> randomList;
 
-        // Create a DownloadTask
-        DownloadTask dltask = new DownloadTask();
+        // Create a DownloadTask & downloads content
+        dlTask = new DownloadTask();
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/countries.json");
 
-        // Downloads the content we want & gets the result
-        dltask.execute("GET", "http://binouze.fabrigli.fr/bieres/1.json");
-
-        // Retrieves the result
+        // Retrieves the content
         try {
-            webContent = dltask.get();
+            webContent = dlTask.get();
         }
-        catch(InterruptedException e) {
-
-        }
-        catch(ExecutionException e) {
-
-        }
+        catch(InterruptedException | ExecutionException e) {}
 
         // Creates the JSON Object
-        JSONObject myjsonobject;
-        String stringJson = new String();
+        stringJson = new String();
 
         // Fills the JSON Object
         try {
-            myjsonobject = new JSONObject(result);
-            stringJson = myjsonobject.toString();
+            webJson = new JSONObject(webContent);
         }
         catch(JSONException e){
             // Nothing
         }
 
-        // Sets the text
-        textElement.setText(stringJson);
-        
+        // Parse the JSON
+        randomList = new ArrayList<String>();
+        randomList.add("Truc");
+        randomList.add("Machin");
+        randomList.add("Chose");
+        randomList.add("Biniou");
+
+        randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
+
+        fiveLastBeers.setAdapter(randomAdapter);
+
     }
 
     /*
