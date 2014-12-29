@@ -11,6 +11,10 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +31,8 @@ public class UserAuth extends ActionBarActivity {
     private Button envoi;
     private TextView message;
     private EditText email, nickname;
+    private String my_email= null,pseudo = null, token = null;
+    private JSONObject json = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,19 +47,45 @@ public class UserAuth extends ActionBarActivity {
         email = (EditText) findViewById(R.id.email);
         nickname = (EditText) findViewById(R.id.nickname);
 
+
+        // if click, email and nickname are send to the server and we receive a token
         envoi.setOnClickListener(
                 new View.OnClickListener()
                 {
                     public void onClick(View view)
                     {
-                        Log.v("EditText", email.getText().toString());
-                        Log.v("EditText", nickname.getText().toString());
+                      //  Log.v("EditText", email.getText().toString());
+                      //  Log.v("EditText", nickname.getText().toString());
+                        // get the strings written in the app
+
+                        my_email = new String(email.getText().toString());
+                        pseudo = new String(nickname.getText().toString());
+                        try {
+                            json = CovertToJson(my_email, pseudo);
+                        }
+                        catch (JSONException e){
+                        }
+                    Toast.makeText(getApplication().getApplicationContext(),"Conersion Well Done !",Toast.LENGTH_LONG).show();
                     }
+
                 });
-
-
-        // Fills the objects (beer name, description, origin...)
     }
+
+    public JSONObject CovertToJson (String email, String nickname) throws JSONException{
+
+        JSONObject json = new JSONObject();
+        JSONObject userJson = new JSONObject();
+        userJson.put("email", email);
+        userJson.put("nickname", nickname);
+        json.put("user",userJson);
+
+        return json;
+    }
+
+    public void SaveInMemory(View v){
+
+    }
+
 
     public void PostUserToken(View v) {
 
