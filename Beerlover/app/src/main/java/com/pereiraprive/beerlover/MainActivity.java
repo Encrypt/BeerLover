@@ -39,6 +39,9 @@ public class MainActivity extends ActionBarActivity {
     // Method to go to the bookmarked beers
     public void displayBookmarks(View v){
 
+        // Displays the list of the beers
+        Intent i = new Intent(getApplicationContext(), BeerDescription.class);
+        startActivity(i);
 
     }
 

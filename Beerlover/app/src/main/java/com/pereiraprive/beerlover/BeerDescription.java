@@ -8,6 +8,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -56,7 +57,7 @@ public class BeerDescription extends ActionBarActivity {
 
         // Local objects
         String webContent = null;
-        JSONObject webJson = null;
+        JSONObject webJson = null, originJson = null;
         DownloadTask dlTask;
         String nameString = new String();
         String descriptionString = new String();
@@ -86,10 +87,12 @@ public class BeerDescription extends ActionBarActivity {
         try {
             nameString = (String) webJson.get("name");
             descriptionString = (String) webJson.get("description");
-            originString = (String) webJson.get("origin");
-            drinkerString = (String) webJson.get("drinker");
+            drinkerString = (String) webJson.get("buveur");
+            originJson = (JSONObject) webJson.get("country");
+            originString = (String) originJson.get("name");
+
         }
-        catch(JSONException e) {}
+        catch(JSONException e) {System.out.println(e);}
 
         // Fills the TextViews
         name.setText(nameString);
