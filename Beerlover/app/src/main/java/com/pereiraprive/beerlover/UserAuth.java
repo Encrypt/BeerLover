@@ -35,12 +35,11 @@ public class UserAuth extends ActionBarActivity {
 
         // Retrieves the objects
 
-        envoi = (Button) FindViewById(R.id.button_send);
-        message = (TextView) FindViewById(R.id.message);
-        email = (EditText) FindViewById(R.id.email);
-        nickname = (EditText) FindViewById(R.Id.nickname);
+        envoi = (Button) findViewById(R.id.button_send);
+        message = (TextView) findViewById(R.id.message);
+        email = (EditText) findViewById(R.id.email);
+        nickname = (EditText) findViewById(R.id.nickname);
 
-        // Adds a Listener to the star
 
         // Fills the objects (beer name, description, origin...)
     }
