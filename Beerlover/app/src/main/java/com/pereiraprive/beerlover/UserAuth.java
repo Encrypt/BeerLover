@@ -5,6 +5,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,21 +23,26 @@ import java.util.concurrent.ExecutionException;
 
 public class UserAuth extends ActionBarActivity {
 
+    private Button envoi;
+    private TextView message;
+    private EditText email, nickname;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Set the "beer_list" content
-        setContentView(R.layout.beer_description);
+        setContentView(R.layout.user_auth);
 
         // Retrieves the objects
 
+        envoi = (Button) FindViewById(R.id.button_send);
+        message = (TextView) FindViewById(R.id.message);
+        email = (EditText) FindViewById(R.id.email);
+        nickname = (EditText) FindViewById(R.Id.nickname);
 
         // Adds a Listener to the star
 
-
         // Fills the objects (beer name, description, origin...)
-
     }
 
     public void PostUserToken(View v) {
