@@ -1,7 +1,6 @@
 package com.pereiraprive.beerlover;
 
 import android.os.AsyncTask;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,57 +13,39 @@ import java.net.URL;
 public class DownloadTask extends AsyncTask<String, Void, String> {
 
     // Class variable
-    String downloadedContent;
-    TextView textElement;
+    private String webMethod;
 
-    // Method calling downloadUrl
+    // Method doInBackground (called once .execute() is called)
     @Override
-    protected String doInBackground(String... urls) {
+    protected String doInBackground(String... args) {
         try {
-            return downloadUrl(urls[0]);
+
+            // Retrieves the web method (GET or POST)
+            webMethod = args[0];
+
+            // Returns the downloaded content
+            return downloadUrl(args[1]);
+
         } catch (IOException e) {
-            return "Error";
+            return "Error while trying to download content";
         }
-    }
-/*
-    // Method calling
-    @Override
-    protected void onPostExecute(String result) {
-
-        // Creates the JSON Object
-        JSONObject myJsonObject;
-        String stringJson = new String();
-
-        // Fills the JSON Object
-        try {
-            myJsonObject = new JSONObject(result);
-            stringJson = myJsonObject.toString();
-        }
-        catch(JSONException e){
-            // Nothing
-        }
-
-        // Sets the text
-        textElement.setText(stringJson);
 
     }
-*/
+
+    // Method downloading
     private String downloadUrl(String myURL) throws IOException {
         InputStream is = null;
 
         try {
             URL url = new URL(myURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(webMethod);
             conn.connect();
             int response = conn.getResponseCode();
             is = conn.getInputStream();
 
-            // Convert the InputStream into a string
-            downloadedContent = readIt(is, 700);
-
-            // Returns sucess
-            return "success";
+            // Returns the content downloaded
+            return readIt(is, 700);
         }
 
         finally {
@@ -82,12 +63,6 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
         char[] buffer = new char[len];
         reader.read(buffer);
         return new String(buffer);
-    }
-
-    // Method to get the (plain) downloaded content in plain text
-    public String getPlainContent() {
-
-        return downloadedContent;
     }
 
 }

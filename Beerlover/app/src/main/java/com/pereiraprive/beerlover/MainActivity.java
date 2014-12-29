@@ -7,6 +7,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
 
+import java.util.concurrent.ExecutionException;
+
 public class MainActivity extends ActionBarActivity {
 
     // Needed variables for this view
@@ -37,8 +39,29 @@ public class MainActivity extends ActionBarActivity {
     // Method to go to the bookmarked beers
     public void displayBookmarks(View v){
 
+        String webContent = "Toto";
+
+        // Create a DownloadTask
+        DownloadTask dltask = new DownloadTask();
+
+        // Downloads the content we want & gets the result
+        dltask.execute("GET", "http://binouze.fabrigli.fr/bieres/1.json");
+
+        // Retrieves the result
+        try {
+            webContent = dltask.get();
+        }
+        catch(InterruptedException e) {
+
+        }
+        catch(ExecutionException e) {
+
+        }
+
+
+
         // Creates a toast to test
-        Toast.makeText(getApplicationContext(), "THE GAME", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), webContent, Toast.LENGTH_SHORT).show();
     }
 
     // Method top fill the 5 last beer discoveries
