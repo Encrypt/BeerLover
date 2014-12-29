@@ -4,6 +4,7 @@ package com.pereiraprive.beerlover;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,6 +40,16 @@ public class UserAuth extends ActionBarActivity {
         message = (TextView) findViewById(R.id.message);
         email = (EditText) findViewById(R.id.email);
         nickname = (EditText) findViewById(R.id.nickname);
+
+        envoi.setOnClickListener(
+                new View.OnClickListener()
+                {
+                    public void onClick(View view)
+                    {
+                        Log.v("EditText", email.getText().toString());
+                        Log.v("EditText", nickname.getText().toString());
+                    }
+                });
 
 
         // Fills the objects (beer name, description, origin...)
