@@ -6,8 +6,12 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
 
 public class BeerDescription extends ActionBarActivity {
 
@@ -43,12 +47,55 @@ public class BeerDescription extends ActionBarActivity {
         });
 
         // Fills the objects (beer name, description, origin...)
-        fillView();
+        fillBearInfo();
 
     }
 
     // Method called to retrieve and set the different elements in teh view
-    private void fillView() {
+    private void fillBearInfo() {
+
+        // Local objects
+        String webContent = null;
+        JSONObject webJson = null;
+        DownloadTask dlTask;
+        String nameString = new String();
+        String descriptionString = new String();
+        String originString = new String();
+        String drinkerString = new String();
+
+        // Creates a new download task with the appropriate random value
+        dlTask = new DownloadTask();
+
+        // Retrieves the associated beer
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/5.json");
+
+        try {
+            webContent = dlTask.get();
+        }
+        catch(InterruptedException | ExecutionException e) {}
+
+        // Fills the JSON Object
+        try {
+            webJson = new JSONObject(webContent);
+        }
+        catch(JSONException e){
+            // Nothing
+        }
+
+        // Retrieves the info
+        try {
+            nameString = (String) webJson.get("name");
+            descriptionString = (String) webJson.get("description");
+            originString = (String) webJson.get("origin");
+            drinkerString = (String) webJson.get("drinker");
+        }
+        catch(JSONException e) {}
+
+        // Fills the TextViews
+        name.setText(nameString);
+        description.setText("Description : " + descriptionString);
+        origin.setText("Origine : " + originString);
+        drinker.setText("Buveur : " + drinkerString);
 
     }
 
