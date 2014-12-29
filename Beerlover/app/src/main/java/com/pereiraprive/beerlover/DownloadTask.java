@@ -57,8 +57,8 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     }
 
     // Method to read "len" length of the content
-    private String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        Reader reader = null;
+    private String readIt(InputStream stream, int len) throws IOException {
+        Reader reader;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         reader.read(buffer);

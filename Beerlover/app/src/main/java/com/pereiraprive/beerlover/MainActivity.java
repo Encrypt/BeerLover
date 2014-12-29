@@ -17,10 +17,6 @@ import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends ActionBarActivity {
 
-    // Needed variables for this view
-    private ListView fiveLastBeers;
-    private DownloadTask dlTask;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,11 +24,8 @@ public class MainActivity extends ActionBarActivity {
         // Set the content of the main activity
         setContentView(R.layout.activity_main);
 
-        // Retrieves the ListView
-        fiveLastBeers = (ListView) findViewById(R.id.fiveLastBeers);
-
-        // Fills the 5 last discoveries
-        fillView();
+        // Fills the random list
+        fillRandomList();
     }
 
     // Method to go to the list of beers
@@ -50,71 +43,58 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // Method top fill the 5 last beer discoveries
-    private void fillView() {
+    private void fillRandomList() {
 
         // Local objects
-        String webContent = "Toto", stringJson;
-        DownloadTask dlTask;
+        int randomNumber;
+        String webContent = null;
         JSONObject webJson = null;
+        DownloadTask dlTask;
         ArrayAdapter<String> randomAdapter;
-        ArrayList<String> randomList;
-        int randomBeer;
+        ArrayList<String> randomList = new ArrayList<String>();
+        ListView fiveRandomBeers = (ListView) findViewById(R.id.fiveRandomBeers);
+        String randomBeerName = new String();
 
-        // Create a DownloadTask & downloads content
-        dlTask = new DownloadTask();
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/142.json");
+        // Populates the ListView
+        for(int i = 1 ; i <= 5 ; i++) {
 
-        // Retrieves the content
-        try {
-            webContent = dlTask.get();
+            // Creates a new download task
+            dlTask = new DownloadTask();
+
+            // Generates a random number
+            randomNumber = 1 + (int)(Math.random() * (151 - 1));
+
+            // Retrieves the associated beer
+            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + randomNumber +".json");
+
+            try {
+                webContent = dlTask.get();
+            }
+            catch(InterruptedException | ExecutionException e) {}
+
+            // Fills the JSON Object
+            try {
+                webJson = new JSONObject(webContent);
+            }
+            catch(JSONException e){
+                // Nothing
+            }
+
+            // Retrieves the beer name
+            try {
+                randomBeerName = (String) webJson.get("name");
+            }
+            catch(JSONException e) {}
+
+            // Adds the beer to the list
+            randomList.add(randomBeerName);
+
         }
-        catch(InterruptedException | ExecutionException e) {}
 
-        // Creates the JSON Object
-        stringJson = new String();
-
-        // Fills the JSON Object
-        try {
-            webJson = new JSONObject(webContent);
-        }
-        catch(JSONException e){
-            // Nothing
-        }
-
-        randomBeer = 1 + (int)(Math.random() * (151 - 1));
-
-        try {
-            stringJson = (String) webJson.get("name");
-        }
-        catch(JSONException e) {
-
-        }
-
-
-        // Parse the JSON
-        randomList = new ArrayList<String>();
-        randomList.add(stringJson);
-        randomList.add("Machin");
-        randomList.add("Chose");
-        randomList.add("Biniou");
-
+        // Finally,
         randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
 
-        fiveLastBeers.setAdapter(randomAdapter);
-
-    }
-
-    // Method to generate a random beer
-    public String randomBeer() {
-
-        // Local variables
-        int randomNumber;
-
-        // Generate a random int
-        randomNumber = 1 + (int)(Math.random() * (151 - 1));
-
-        // Gets the beer
-        return "Bidule";
+        fiveRandomBeers.setAdapter(randomAdapter);
 
     }
 

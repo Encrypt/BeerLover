@@ -24,7 +24,7 @@
     <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fiveLastBeers"
+        android:id="@+id/fiveRandomBeers"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
@@ -35,8 +35,9 @@
         android:layout_height="wrap_content"
         android:text="@string/listButtonText"
         android:id="@+id/button1"
-        android:layout_below="@+id/fiveLastBeers"
+        android:layout_below="@+id/fiveRandomBeers"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:onClick="displayBeerList" />
 
     <Button
