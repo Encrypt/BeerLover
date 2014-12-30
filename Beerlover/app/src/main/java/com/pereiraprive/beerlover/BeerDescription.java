@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -165,11 +166,18 @@ public class BeerDescription extends ActionBarActivity {
         if(!isUserAuth) {
 
             // Retrieves the file
-            File saveFile;
-            saveFile = new File(getApplicationContext().getFilesDir() + "/" + "BeerloverToken.txt");
+            FileInputStream saveFile = null;
+            boolean fileExists = true;
+
+            try {
+                saveFile = openFileInput("BeerloverToken.txt");
+            }
+            catch(FileNotFoundException e){
+                fileExists = false;
+            }
 
             // Test if the file exists. If not, launch the UserAuth activity
-            if(saveFile == null) {
+            if(!fileExists) {
 
                 // Launch the UserAuth activity
                 Intent i = new Intent(getApplicationContext(), UserAuth.class);
@@ -185,17 +193,15 @@ public class BeerDescription extends ActionBarActivity {
                 isUserAuth = true;
 
                 // Retrieves its token
-                FileReader tokenFReader = null;
+                userToken = "";
+                int c;
+
                 try {
-                    tokenFReader = new FileReader(saveFile);
-                } catch (FileNotFoundException e) {
+                    while ((c = saveFile.read()) != -1) {
+                        userToken = userToken + Character.toString((char) c);
+                    }
                 }
-
-                BufferedReader tokenBReader = new BufferedReader(tokenFReader);
-
-                try {
-                    userToken = tokenBReader.readLine();
-                } catch (IOException e) {}
+                catch (IOException e) {}
 
             }
 
