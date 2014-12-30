@@ -49,7 +49,15 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
-    // Method top fill the 5 last beer discoveries
+    // Method to go to the identification view
+    public void displayUserAuth(View v) {
+
+        // Displays the list of the beers
+        Intent i = new Intent(getApplicationContext(), UserAuth.class);
+        startActivity(i);
+    }
+
+        // Method top fill the 5 last beer discoveries
     private void fillRandomList() {
 
         // Local objects

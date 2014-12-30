@@ -82,8 +82,8 @@ public class UserAuth extends ActionBarActivity {
 
         JSONObject json = new JSONObject();
         JSONObject userJson = new JSONObject();
-        userJson.put("email", email);
         userJson.put("nickname", nickname);
+        userJson.put("email", email);
         json.put("user",userJson);
         return json;
     }
@@ -117,13 +117,14 @@ public class UserAuth extends ActionBarActivity {
         DownloadTask dltask = new DownloadTask();
 
         // Downloads the content we want & gets the result
-        // TODO
-        dltask.execute("POST", "http://binouze.fabrigli.fr/user.json");
+
+        dltask.execute("POST", "http://binouze.fabrigli.fr/user.json", content);
 
         // Retrieves the result
         try {
             token = dltask.get();
             System.out.println(token);
+            SaveInMemory("BeerloverToken",token);
 
         } catch (InterruptedException e) {
 
