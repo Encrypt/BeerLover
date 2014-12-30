@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
-    private boolean isBookmarked = true, isUserAuth = false, isUserInAuth = false;
+    private boolean isBookmarked = true, isUserAuth = false, isUserInAuth = false, justLaunched = true;
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
@@ -67,12 +67,16 @@ public class BeerDescription extends ActionBarActivity {
 
     // Method called once the user comes back (normally) from the UserAuth activity
     protected void onResume() {
+        super.onResume();
 
         // Tests if the user has registered and now bookmarks
-        if(isUserInAuth) {
+        if(isUserInAuth && !justLaunched) {
             bookmarkClick();
             isUserInAuth = false;
         }
+
+        // Sets the app as justLaunched now
+        justLaunched = false;
 
     }
 
@@ -133,8 +137,6 @@ public class BeerDescription extends ActionBarActivity {
         dlTask = new DownloadTask();
         dlTask.execute("GET", "http://binouze.fabrigli.fr" + pictureString);
 
-        System.out.println("http://binouze.fabrigli.fr" + pictureString);
-
         try {
             webContent = dlTask.get();
         }
@@ -146,8 +148,6 @@ public class BeerDescription extends ActionBarActivity {
             pictureBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
 
         }catch(Exception e){}
-
-        System.out.println(webContent);
 
         // Fills the TextViews & picture
         name.setText(nameString);
