@@ -16,9 +16,13 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -65,10 +69,11 @@ public class UserAuth extends ActionBarActivity {
                         }
                         catch (JSONException e){
                         }
-                    Toast.makeText(getApplication().getApplicationContext(),"Conersion Well Done !",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication().getApplicationContext(),"Conversion Well Done !",Toast.LENGTH_LONG).show();
                     }
 
                 });
+
     }
 
     public JSONObject CovertToJson (String email, String nickname) throws JSONException{
@@ -78,18 +83,33 @@ public class UserAuth extends ActionBarActivity {
         userJson.put("email", email);
         userJson.put("nickname", nickname);
         json.put("user",userJson);
-
         return json;
     }
 
-    public void SaveInMemory(View v){
 
+    private void SaveInMemory(String nom_Fichier,String mon_Text) {
+        BufferedWriter writer = null;
+        try {
+            File dir = getDir("ToutMesFichiers",MODE_PRIVATE);
+            File new_file = new File(dir.getAbsolutePath() + File.separator + nom_Fichier);
+            new_file.createNewFile();
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new_file)));
+            writer.write(mon_Text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
+    public void PostUserToken(JSONObject json) {
 
-    public void PostUserToken(View v) {
-
-        String webContent = "Toto";
         String token = null;
         // Create a DownloadTask
         DownloadTask dltask = new DownloadTask();
@@ -99,7 +119,9 @@ public class UserAuth extends ActionBarActivity {
 
         // Retrieves the result
         try {
-            webContent = dltask.get();
+            token = dltask.get();
+            System.out.println(token);
+
         } catch (InterruptedException e) {
 
         } catch (ExecutionException e) {
