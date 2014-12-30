@@ -37,6 +37,7 @@ public class UserAuth extends ActionBarActivity {
     private EditText email, nickname;
     private String my_email= null,pseudo = null, token = null;
     private JSONObject json = null;
+    private String content = null;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,10 +67,11 @@ public class UserAuth extends ActionBarActivity {
                         pseudo = new String(nickname.getText().toString());
                         try {
                             json = CovertToJson(my_email, pseudo);
+                            content = json.toString();
                         }
                         catch (JSONException e){
                         }
-                    Toast.makeText(getApplication().getApplicationContext(),"Conversion Well Done !",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication().getApplicationContext(),"Conversion Well Done !"+ content,Toast.LENGTH_LONG).show();
                     }
 
                 });
@@ -115,6 +117,7 @@ public class UserAuth extends ActionBarActivity {
         DownloadTask dltask = new DownloadTask();
 
         // Downloads the content we want & gets the result
+        // TODO
         dltask.execute("POST", "http://binouze.fabrigli.fr/user.json");
 
         // Retrieves the result
