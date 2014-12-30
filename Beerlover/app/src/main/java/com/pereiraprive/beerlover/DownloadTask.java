@@ -1,7 +1,11 @@
 package com.pereiraprive.beerlover;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.util.Base64;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -67,8 +71,29 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             int response = conn.getResponseCode();
             is = conn.getInputStream();
 
-            // Returns the content downloaded
-            return readIt(is, 700);
+            // Checks if the URL contains "png", "jpg"... (so if it's a picture)
+            if(myURL.contains(".jpg") || myURL.contains(".png")) {
+
+                // Local objects
+                Bitmap bitmapBeer;
+                String stringBeer;
+                byte[] byteBeer;
+                ByteArrayOutputStream byteOS;
+
+                // Encodes the picture
+                bitmapBeer = BitmapFactory.decodeStream(is);
+                byteOS = new ByteArrayOutputStream();
+                bitmapBeer.compress(Bitmap.CompressFormat.PNG, 100, byteOS);
+                byteBeer = byteOS.toByteArray();
+                stringBeer = Base64.encodeToString(byteBeer, Base64.DEFAULT);
+
+                return stringBeer;
+            }
+
+            // Else, it's simply text, returns the content downloaded
+            else
+                return readText(is, 1000);
+
         }
 
         finally {
@@ -80,7 +105,7 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     }
 
     // Method to read "len" length of the content
-    private String readIt(InputStream stream, int len) throws IOException {
+    private String readText(InputStream stream, int len) throws IOException {
         Reader reader;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];

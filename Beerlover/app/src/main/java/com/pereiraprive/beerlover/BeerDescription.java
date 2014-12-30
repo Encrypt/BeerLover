@@ -1,8 +1,11 @@
 package com.pereiraprive.beerlover;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Base64;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -30,7 +33,6 @@ public class BeerDescription extends ActionBarActivity {
         // Retrieves the beer ID
         Bundle bundle = getIntent().getExtras();
         beerID = bundle.getInt("beerID");
-        System.out.println(beerID);
 
         // Set the "beer_list" content
         setContentView(R.layout.beer_description);
@@ -63,12 +65,14 @@ public class BeerDescription extends ActionBarActivity {
 
         // Local objects
         String webContent = null;
-        JSONObject webJson = null, originJson = null;
+        JSONObject webJson = null, tmpJson = null;
         DownloadTask dlTask;
         String nameString = new String();
         String descriptionString = new String();
         String originString = new String();
         String drinkerString = new String();
+        String pictureString = new String();
+        Bitmap pictureBitmap = null;
 
         // Creates a new download task with the appropriate random value
         dlTask = new DownloadTask();
@@ -91,20 +95,50 @@ public class BeerDescription extends ActionBarActivity {
 
         // Retrieves the info
         try {
+
+            // Easily accessible info
             nameString = (String) webJson.get("name");
             descriptionString = (String) webJson.get("description");
             drinkerString = (String) webJson.get("buveur");
-            originJson = (JSONObject) webJson.get("country");
-            originString = (String) originJson.get("name");
+
+            // Country and picture
+            tmpJson = (JSONObject) webJson.get("country");
+            originString = (String) tmpJson.get("name");
+
+            tmpJson = (JSONObject) webJson.get("image");
+            tmpJson = (JSONObject) tmpJson.get("image");
+            tmpJson = (JSONObject) tmpJson.get("thumb");
+            pictureString = (String) tmpJson.get("url");
 
         }
         catch(JSONException e) {}
 
-        // Fills the TextViews
+        // Gets the picture
+        dlTask = new DownloadTask();
+        dlTask.execute("GET", "http://binouze.fabrigli.fr" + pictureString);
+
+        System.out.println("http://binouze.fabrigli.fr" + pictureString);
+
+        try {
+            webContent = dlTask.get();
+        }
+        catch(InterruptedException | ExecutionException e) {}
+
+        // Decodes the picture
+        try{
+            byte[] encodeByte=Base64.decode(webContent, Base64.DEFAULT);
+            pictureBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+
+        }catch(Exception e){}
+
+        System.out.println(webContent);
+
+        // Fills the TextViews & picture
         name.setText(nameString);
         description.setText("Description : " + descriptionString);
         origin.setText("Origine : " + originString);
         drinker.setText("Buveur : " + drinkerString);
+        beerImage.setImageBitmap(pictureBitmap);
 
     }
 

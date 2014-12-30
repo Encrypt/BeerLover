@@ -79,6 +79,7 @@
       <excludeFolder url="file:///media/Data/yann/Documents/E.S.I.E.A./Programmation_mobile/Beerlover/app/build/intermediates/rs" />
       <excludeFolder url="file:///media/Data/yann/Documents/E.S.I.E.A./Programmation_mobile/Beerlover/app/build/intermediates/symbols" />
       <excludeFolder url="file:///media/Data/yann/Documents/E.S.I.E.A./Programmation_mobile/Beerlover/app/build/outputs" />
+      <excludeFolder url="file:///media/Data/yann/Documents/E.S.I.E.A./Programmation_mobile/Beerlover/app/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
