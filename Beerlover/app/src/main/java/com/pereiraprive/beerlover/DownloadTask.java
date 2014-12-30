@@ -2,18 +2,18 @@ package com.pereiraprive.beerlover;
 
 import android.os.AsyncTask;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class DownloadTask extends AsyncTask<String, Void, String> {
 
     // Class variable
-    private String webMethod;
+    private String webMethod, myURL, postContent;
 
     // Method doInBackground (called once .execute() is called)
     @Override
@@ -23,8 +23,15 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             // Retrieves the web method (GET or POST)
             webMethod = args[0];
 
+            // Retrieves the URL
+            myURL = args[1];
+
+            // Retrieves the POST content if there is some
+            if(args.length == 3)
+                postContent = args[2];
+
             // Returns the downloaded content
-            return downloadUrl(args[1]);
+            return downloadUrl();
 
         } catch (IOException e) {
             return "Error while trying to download content";
@@ -33,14 +40,30 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
     }
 
     // Method downloading
-    private String downloadUrl(String myURL) throws IOException {
+    private String downloadUrl() throws IOException {
+
+        // Method objects
         InputStream is = null;
 
         try {
+
             URL url = new URL(myURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod(webMethod);
             conn.connect();
+
+            // If the method is post, send data
+            if(webMethod.equals("POST")) {
+
+                // Creates an OutputStream
+                DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
+
+                // Sends data
+                wr.writeBytes(postContent);
+                wr.flush();
+                wr.close();
+            }
+
             int response = conn.getResponseCode();
             is = conn.getInputStream();
 
