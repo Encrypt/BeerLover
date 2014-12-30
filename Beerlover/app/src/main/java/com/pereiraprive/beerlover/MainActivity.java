@@ -1,5 +1,6 @@
 package com.pereiraprive.beerlover;
 
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.content.Intent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -44,20 +46,12 @@ public class MainActivity extends ActionBarActivity {
     public void displayBookmarks(View v){
 
         // Displays the list of the beers
-        Intent i = new Intent(getApplicationContext(), BeerDescription.class);
-        startActivity(i);
-
-    }
-
-    // Method to go to the identification view
-    public void displayUserAuth(View v) {
-
-        // Displays the list of the beers
         Intent i = new Intent(getApplicationContext(), UserAuth.class);
         startActivity(i);
+
     }
 
-        // Method top fill the 5 last beer discoveries
+    // Method top fill the 5 last beer discoveries
     private void fillRandomList() {
 
         // Local objects
@@ -148,7 +142,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     // Method to display the description of a random beer
-    public void describeBeer(int itemClicked) {
+    private void describeBeer(int itemClicked) {
 
         // Create a new intent & passes the beer ID
         Intent intent = new Intent(getApplicationContext(),BeerDescription.class);

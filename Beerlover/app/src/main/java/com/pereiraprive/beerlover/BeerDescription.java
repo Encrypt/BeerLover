@@ -1,8 +1,8 @@
 package com.pereiraprive.beerlover;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Base64;
@@ -11,20 +11,25 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
-    private boolean isBookmarked = true;
+    private boolean isBookmarked = true, isUserAuth = false, isUserInAuth = false;
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
     private int beerID;
+    private String userToken;
 
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,17 @@ public class BeerDescription extends ActionBarActivity {
 
         // Fills the objects (beer name, description, origin...)
         fillBearInfo();
+
+    }
+
+    // Method called once the user comes back (normally) from the UserAuth activity
+    protected void onResume() {
+
+        // Tests if the user has registered and now bookmarks
+        if(isUserInAuth) {
+            bookmarkClick();
+            isUserInAuth = false;
+        }
 
     }
 
@@ -144,6 +160,46 @@ public class BeerDescription extends ActionBarActivity {
 
     // Method called once the button has been pressed
     private void bookmarkClick() {
+
+        // Checks if the user has an account on the server
+        if(!isUserAuth) {
+
+            // Retrieves the file
+            File saveFile;
+            saveFile = new File(getApplicationContext().getFilesDir() + "/" + "BeerloverToken.txt");
+
+            // Test if the file exists. If not, launch the UserAuth activity
+            if(saveFile == null) {
+
+                // Launch the UserAuth activity
+                Intent i = new Intent(getApplicationContext(), UserAuth.class);
+                startActivity(i);
+
+                // Tells the boolean the user is in the Auth process
+                isUserInAuth = true;
+            }
+
+            else {
+
+                // Changes the value of the isUserAuth boolean
+                isUserAuth = true;
+
+                // Retrieves its token
+                FileReader tokenFReader = null;
+                try {
+                    tokenFReader = new FileReader(saveFile);
+                } catch (FileNotFoundException e) {
+                }
+
+                BufferedReader tokenBReader = new BufferedReader(tokenFReader);
+
+                try {
+                    userToken = tokenBReader.readLine();
+                } catch (IOException e) {}
+
+            }
+
+        }
 
         // If the beer is bookmarked
         if (isBookmarked) {
