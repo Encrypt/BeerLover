@@ -69,10 +69,11 @@ public class UserAuth extends ActionBarActivity {
                         }
                         catch (JSONException e){
                         }
-                    Toast.makeText(getApplication().getApplicationContext(),"Conersion Well Done !",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplication().getApplicationContext(),"Conversion Well Done !",Toast.LENGTH_LONG).show();
                     }
 
                 });
+
     }
 
     public JSONObject CovertToJson (String email, String nickname) throws JSONException{
@@ -82,7 +83,6 @@ public class UserAuth extends ActionBarActivity {
         userJson.put("email", email);
         userJson.put("nickname", nickname);
         json.put("user",userJson);
-
         return json;
     }
 
@@ -90,7 +90,7 @@ public class UserAuth extends ActionBarActivity {
     private void SaveInMemory(String nom_Fichier,String mon_Text) {
         BufferedWriter writer = null;
         try {
-            File dir = getDir("Tout_Mes_Fichiers",MODE_PRIVATE);
+            File dir = getDir("ToutMesFichiers",MODE_PRIVATE);
             File new_file = new File(dir.getAbsolutePath() + File.separator + nom_Fichier);
             new_file.createNewFile();
             writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new_file)));
@@ -108,9 +108,8 @@ public class UserAuth extends ActionBarActivity {
         }
     }
 
-    public void PostUserToken(View v) {
+    public void PostUserToken(JSONObject json) {
 
-        String webContent = "Toto";
         String token = null;
         // Create a DownloadTask
         DownloadTask dltask = new DownloadTask();
@@ -120,7 +119,9 @@ public class UserAuth extends ActionBarActivity {
 
         // Retrieves the result
         try {
-            webContent = dltask.get();
+            token = dltask.get();
+            System.out.println(token);
+
         } catch (InterruptedException e) {
 
         } catch (ExecutionException e) {
