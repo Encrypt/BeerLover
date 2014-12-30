@@ -57,6 +57,7 @@ public class UserAuth extends ActionBarActivity {
                 try {
                     json = ConvertToJson(my_email, pseudo);
                     content = json.toString();
+                    PostUserToken(content);
                 }
                 catch (JSONException e){}
 
@@ -100,7 +101,7 @@ public class UserAuth extends ActionBarActivity {
         }
     }
 
-    public void PostUserToken(JSONObject json) {
+    public void PostUserToken(String content) {
 
         String token = null;
 
