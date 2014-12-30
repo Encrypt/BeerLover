@@ -16,9 +16,13 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -82,10 +86,27 @@ public class UserAuth extends ActionBarActivity {
         return json;
     }
 
-    public void SaveInMemory(View v){
 
+    private void SaveInMemory(String nom_Fichier,String mon_Text) {
+        BufferedWriter writer = null;
+        try {
+            File dir = getDir("Tout_Mes_Fichiers",MODE_PRIVATE);
+            File new_file = new File(dir.getAbsolutePath() + File.separator + nom_Fichier);
+            new_file.createNewFile();
+            writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new_file)));
+            writer.write(mon_Text);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (writer != null) {
+                try {
+                    writer.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
-
 
     public void PostUserToken(View v) {
 
