@@ -21,10 +21,16 @@ public class BeerDescription extends ActionBarActivity {
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
+    private int beerID;
 
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Retrieves the beer ID
+        Bundle bundle = getIntent().getExtras();
+        beerID = bundle.getInt("beerID");
+        System.out.println(beerID);
 
         // Set the "beer_list" content
         setContentView(R.layout.beer_description);
@@ -68,7 +74,7 @@ public class BeerDescription extends ActionBarActivity {
         dlTask = new DownloadTask();
 
         // Retrieves the associated beer
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/5.json");
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + beerID + ".json");
 
         try {
             webContent = dlTask.get();
@@ -92,7 +98,7 @@ public class BeerDescription extends ActionBarActivity {
             originString = (String) originJson.get("name");
 
         }
-        catch(JSONException e) {System.out.println(e);}
+        catch(JSONException e) {}
 
         // Fills the TextViews
         name.setText(nameString);

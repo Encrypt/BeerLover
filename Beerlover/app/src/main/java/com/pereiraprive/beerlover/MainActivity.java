@@ -3,11 +3,12 @@ package com.pereiraprive.beerlover;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,6 +17,9 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends ActionBarActivity {
+
+    // Class objects
+    int randomNumbers[] = new int[5];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,6 @@ public class MainActivity extends ActionBarActivity {
 
         // Local objects
         int randomNumber;
-        int randomNumbers[] = new int[5];
         Boolean alreadyExists = false;
         String webContent = null;
         JSONObject webJson = null;
@@ -77,8 +80,6 @@ public class MainActivity extends ActionBarActivity {
                     if(randomNumbers[j] == randomNumber)
                         alreadyExists = true;
 
-                    else
-                        alreadyExists = false;
                 }
 
             } while(alreadyExists);
@@ -126,8 +127,29 @@ public class MainActivity extends ActionBarActivity {
         randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
         fiveRandomBeers.setAdapter(randomAdapter);
 
+        // And adds a Click Listener
+        fiveRandomBeers.setOnItemClickListener(new OnItemClickListener() {
+
+            // Method called once the bookmark button has been pressed
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+                describeBeer(position);
+            }
+        });
+
     }
 
+    // Method to display the description of a random beer
+    public void describeBeer(int itemClicked) {
+
+        // Create a new intent & passes the beer ID
+        Intent intent = new Intent(getApplicationContext(),BeerDescription.class);
+        intent.putExtra("beerID", randomNumbers[itemClicked]);
+
+        // Starts the activity
+        startActivity(intent);
+
+    }
     /*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
