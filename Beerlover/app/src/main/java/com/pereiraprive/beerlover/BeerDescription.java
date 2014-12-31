@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -146,6 +147,9 @@ public class BeerDescription extends ActionBarActivity {
 
 
         DownloadTask dltask;
+        String content;
+        JSONObject json;
+
 
         // Checks if the user has an account on the server
         if(!isUserAuth) {
@@ -207,6 +211,12 @@ public class BeerDescription extends ActionBarActivity {
                 // Removes the bookmark in the database
                 // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 0},user: {id: Y,token: userToken}})
 
+                try {
+                    json = ConvertToJson(beerID,0,1,userToken);
+                    content = json.toString();
+                    Toast.makeText(getBaseContext(),content, Toast.LENGTH_SHORT).show();
+                }
+                catch (JSONException e){}
 
             }
 
@@ -222,6 +232,12 @@ public class BeerDescription extends ActionBarActivity {
                 // Adds the bookmark in the database
                 // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 5},user: {id: Y,token: userToken}})
 
+                try {
+                    json = ConvertToJson(beerID,5,1,userToken);
+                    content = json.toString();
+                    Toast.makeText(getBaseContext(),content, Toast.LENGTH_SHORT).show();
+                }
+                catch (JSONException e){}
             }
 
         }
@@ -232,9 +248,13 @@ public class BeerDescription extends ActionBarActivity {
 
         JSONObject json = new JSONObject();
         JSONObject userJson = new JSONObject();
-        userJson.put("biere_id", beerID);
-        userJson.put("value", value);
-        json.put("note",userJson);
+        JSONObject noteJson = new JSONObject();
+        noteJson.put("biere_id", beerID);
+        noteJson.put("value", value);
+        userJson.put("id", people_id);
+        userJson.put("token", token);
+        json.put("user", userJson);
+        json.put("note",noteJson);
         return json;
     }
 
