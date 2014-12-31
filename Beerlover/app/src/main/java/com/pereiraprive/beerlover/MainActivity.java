@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
     public void displayBookmarks(View v){
 
         // Displays the list of the beers
-        Intent i = new Intent(getApplicationContext(), UserAuth.class);
+        Intent i = new Intent(getApplicationContext(), MyBookmarks.class);
         startActivity(i);
 
     }

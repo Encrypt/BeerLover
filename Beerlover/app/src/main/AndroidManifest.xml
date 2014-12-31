@@ -27,6 +27,10 @@
         </activity>
 
         <activity
+            android:name=".MyBookmarks" >
+        </activity>
+
+        <activity
             android:name=".UserAuth" >
         </activity>
 
