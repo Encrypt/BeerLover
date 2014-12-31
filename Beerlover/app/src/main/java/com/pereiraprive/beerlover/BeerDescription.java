@@ -226,7 +226,7 @@ public class BeerDescription extends ActionBarActivity {
                     json = setMarkAs(0);
                     content = json.toString();
                     dlTask.execute("POST", "http://binouze.fabrigli.fr/notes.json", "JSON", content);
-                    Toast.makeText(getBaseContext(),"La bière a été retiré des favoris", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(),"Favori bien supprimé !", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e){}
 
@@ -247,7 +247,7 @@ public class BeerDescription extends ActionBarActivity {
                     json = setMarkAs(5);
                     content = json.toString();
                     dlTask.execute("POST", "http://binouze.fabrigli.fr/notes.json", "JSON", content);
-                    Toast.makeText(getBaseContext(),"La bière a été ajouté aux favoris", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getBaseContext(),"Favori bien ajouté !", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e) {}
             }

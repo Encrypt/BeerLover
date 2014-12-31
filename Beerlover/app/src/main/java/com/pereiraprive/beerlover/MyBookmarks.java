@@ -3,6 +3,7 @@ package com.pereiraprive.beerlover;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.ListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -10,6 +11,7 @@ import org.json.JSONObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 public class MyBookmarks extends ActionBarActivity {
 
@@ -23,8 +25,7 @@ public class MyBookmarks extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         // Set the content of the main activity
-        setContentView(R.layout.activity_main);
-        // TODO : Créer un style
+        setContentView(R.layout.bookmarks);
 
     }
 
@@ -36,6 +37,42 @@ public class MyBookmarks extends ActionBarActivity {
         // Auths the user
         if(!isUserAuth)
             authUser();
+
+        // Fills the view
+        fillView();
+
+    }
+
+    // Method to fill the view with the bookmarks
+    private void fillView() {
+
+        // Local objects
+        ListView allBookmarks;
+        DownloadTask dlTask;
+        String webContent = new String();
+        JSONObject bookmarksJson = null, tmpJson = null;
+
+        // Retrieves the ListView & User bookmarks
+        allBookmarks = (ListView) findViewById(R.id.allBookmarks);
+
+        // Retrieves the bookmarked beers
+        dlTask = new DownloadTask();
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/notes.json?user[id=" + userID +"&user[token=" + userToken, "TXT");
+        try {
+            webContent = dlTask.get();
+        }
+        catch(InterruptedException | ExecutionException e) {}
+
+        // Parse the favs
+        try {
+            bookmarksJson = new JSONObject(webContent);
+
+            // TODO : Parsing du JSON
+
+        }
+        catch(JSONException e) {}
+
+        System.out.println(webContent);
 
     }
 

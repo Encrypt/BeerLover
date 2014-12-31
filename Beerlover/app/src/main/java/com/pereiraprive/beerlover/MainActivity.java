@@ -126,7 +126,7 @@ public class MainActivity extends ActionBarActivity {
         }
 
         // Finally, sets the List in the ListView
-        randomAdapter = new ArrayAdapter<String>(this, R.layout.random_list, randomList);
+        randomAdapter = new ArrayAdapter<String>(this, R.layout.simple_list, randomList);
         fiveRandomBeers.setAdapter(randomAdapter);
 
         // And adds a Click Listener
