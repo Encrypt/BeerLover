@@ -254,8 +254,8 @@ public class BeerDescription extends ActionBarActivity {
         noteJson.put("value", value);
         userJson.put("id", 1);
         userJson.put("token", userToken);
-        json.put("user", userJson);
         json.put("note",noteJson);
+        json.put("user", userJson);
         return json;
     }
 
