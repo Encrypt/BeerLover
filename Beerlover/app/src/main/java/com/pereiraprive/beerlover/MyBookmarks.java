@@ -25,7 +25,9 @@ public class MyBookmarks extends ActionBarActivity {
     }
 
     // Method called once the user sees this view
-    protected void OnResume() {
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         // Auths the user
         if(!isUserAuth)
@@ -53,6 +55,7 @@ public class MyBookmarks extends ActionBarActivity {
             // Launch the UserAuth activity
             Intent i = new Intent(getApplicationContext(), UserAuth.class);
             startActivity(i);
+            finish();
 
         }
 
