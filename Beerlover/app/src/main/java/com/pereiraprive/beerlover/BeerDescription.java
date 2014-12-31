@@ -146,7 +146,7 @@ public class BeerDescription extends ActionBarActivity {
     private void bookmarkClick() {
 
 
-        DownloadTask dltask;
+        DownloadTask dltask = new DownloadTask();
         String content;
         JSONObject json;
 
@@ -209,12 +209,12 @@ public class BeerDescription extends ActionBarActivity {
                 bookmarkButton.setBackgroundResource(R.drawable.empty_star);
 
                 // Removes the bookmark in the database
-                // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 0},user: {id: Y,token: userToken}})
 
                 try {
-                    json = ConvertToJson(beerID,0,1,userToken);
+                    json = ConvertToJson(0);
                     content = json.toString();
-                    Toast.makeText(getBaseContext(),content, Toast.LENGTH_SHORT).show();
+                    dltask.execute("POST", "http://binouze.fabrigli.fr/notes.json",content);
+                    Toast.makeText(getBaseContext(),"La bière a été retiré des favoris", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e){}
 
@@ -230,12 +230,12 @@ public class BeerDescription extends ActionBarActivity {
                 bookmarkButton.setBackgroundResource(R.drawable.filled_star);
 
                 // Adds the bookmark in the database
-                // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 5},user: {id: Y,token: userToken}})
 
                 try {
                     json = ConvertToJson(5);
                     content = json.toString();
-                    Toast.makeText(getBaseContext(),content, Toast.LENGTH_SHORT).show();
+                    dltask.execute("POST", "http://binouze.fabrigli.fr/notes.json",content);
+                    Toast.makeText(getBaseContext(),"La bière a été ajouté aux favoris", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e) {}
             }
