@@ -6,6 +6,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ExpandableListView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.ExecutionException;
+
 public class BeerList extends ActionBarActivity {
 
     // Needed variables for this view
@@ -14,11 +19,10 @@ public class BeerList extends ActionBarActivity {
 
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
+        super.onCreate(savedInstanceState);
         // Set the "beer_list" content
         setContentView(R.layout.beer_list);
-
         // Retrieves the ExpendableListView view
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
@@ -47,4 +51,26 @@ public class BeerList extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public JSONObject DownloadJsonType (String type){
+
+
+        DownloadTask dltask = new DownloadTask();
+        JSONObject categorie_json=null;
+        String cat=null;
+
+        // download the files to fill the Expandable listview
+        dltask.execute("GET", "http://binouze.fabrigli.fr/" +type+ ".json" ,"text");
+        try {
+
+            cat = dltask.get();
+        }
+        catch(InterruptedException | ExecutionException e) {}
+
+        try{
+            categorie_json = new JSONObject(cat);
+        }
+        catch (JSONException e){}
+
+        return categorie_json;
+    }
 }
