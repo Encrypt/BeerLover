@@ -14,18 +14,15 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
-    private boolean isBookmarked = true, isUserAuth = false, isUserInAuth = false, justLaunched = true;
+    private boolean isBookmarked = false, isUserAuth = false;
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
@@ -63,21 +60,6 @@ public class BeerDescription extends ActionBarActivity {
 
         // Fills the objects (beer name, description, origin...)
         fillBearInfo();
-
-    }
-
-    // Method called once the user comes back (normally) from the UserAuth activity
-    protected void onResume() {
-        super.onResume();
-
-        // Tests if the user has registered and now bookmarks
-        if(isUserInAuth && !justLaunched) {
-            bookmarkClick();
-            isUserInAuth = false;
-        }
-
-        // Sets the app as justLaunched now
-        justLaunched = false;
 
     }
 
@@ -183,8 +165,6 @@ public class BeerDescription extends ActionBarActivity {
                 Intent i = new Intent(getApplicationContext(), UserAuth.class);
                 startActivity(i);
 
-                // Tells the boolean the user is in the Auth process
-                isUserInAuth = true;
             }
 
             else {
@@ -203,36 +183,43 @@ public class BeerDescription extends ActionBarActivity {
                 }
                 catch (IOException e) {}
 
+                // Calls the bookmarkClick method again
+                bookmarkClick();
+
             }
 
         }
 
-        // If the beer is bookmarked
-        if (isBookmarked) {
-
-            // Changes the bookmark value
-            isBookmarked = false;
-
-            // Changes the background image
-            bookmarkButton.setBackgroundResource(R.drawable.empty_star);
-
-            // Removes the bookmark in the database
-            // TODO
-
-
-        }
-
-        // Else, the beer is not bookmarked
         else {
 
-            // Changes the bookmark value
-            isBookmarked = true;
+            // If the beer is bookmarked
+            if (isBookmarked) {
 
-            // Changes the background image
-            bookmarkButton.setBackgroundResource(R.drawable.filled_star);
+                // Changes the bookmark value
+                isBookmarked = false;
 
-            // Adds the bookmark in the database
-            // TODO
+                // Changes the background image
+                bookmarkButton.setBackgroundResource(R.drawable.empty_star);
+
+                // Removes the bookmark in the database
+                // TODO
+
+
+            }
+
+            // Else, the beer is not bookmarked
+            else {
+
+                // Changes the bookmark value
+                isBookmarked = true;
+
+                // Changes the background image
+                bookmarkButton.setBackgroundResource(R.drawable.filled_star);
+
+                // Adds the bookmark in the database
+                // TODO
+
+            }
 
         }
 
