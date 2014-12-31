@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 public class MyBookmarks extends ActionBarActivity {
@@ -50,7 +52,10 @@ public class MyBookmarks extends ActionBarActivity {
         ListView allBookmarks;
         DownloadTask dlTask;
         String webContent = new String();
-        JSONObject bookmarksJson = null, tmpJson = null;
+        JSONObject jsonObject = null, tmpJson = null;
+        JSONArray jsonArray = null;
+        ArrayList<String> bookmarksListName = new ArrayList<String>();
+        ArrayList<Integer> bookmarksListID = new ArrayList<Integer>();
 
         // Retrieves the ListView & User bookmarks
         allBookmarks = (ListView) findViewById(R.id.allBookmarks);
@@ -65,14 +70,44 @@ public class MyBookmarks extends ActionBarActivity {
 
         // Parse the favs
         try {
-            bookmarksJson = new JSONObject(webContent);
+            jsonArray = new JSONArray(webContent);
 
-            // TODO : Parsing du JSON
+            for(int i = 0 ; i < jsonArray.length() ; i++) {
 
+                // Takes the next JSON Object
+                jsonObject = jsonArray.getJSONObject(i);
+
+                // Retrieves its name and put it in the list
+                bookmarksListID.add(jsonObject.getInt("biere_id"));
+
+            }
         }
         catch(JSONException e) {}
 
-        System.out.println(webContent);
+        // Then retrieves the name of the favs
+        for(int i = 0 ; i < bookmarksListID.size() ; i++) {
+
+            // Creates a new download task & retrieves the associated beer
+            dlTask = new DownloadTask();
+            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" +  +".json", "TXT");
+
+            try {
+                webContent = dlTask.get();
+            }
+            catch(InterruptedException | ExecutionException e) {}
+
+            // Fills the JSON Object & retrieves the beer name
+            try {
+                // webJson = new JSONObject(webContent);
+                // randomBeerName = (String) webJson.get("name");
+            }
+            catch(JSONException e){
+                // Nothing
+            }
+
+            // TODO : A finir
+
+        }
 
     }
 

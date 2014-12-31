@@ -106,19 +106,14 @@ public class MainActivity extends ActionBarActivity {
             }
             catch(InterruptedException | ExecutionException e) {}
 
-            // Fills the JSON Object
+            // Fills the JSON Object & retrieves the beer name
             try {
                 webJson = new JSONObject(webContent);
+                randomBeerName = (String) webJson.get("name");
             }
             catch(JSONException e){
                 // Nothing
             }
-
-            // Retrieves the beer name
-            try {
-                randomBeerName = (String) webJson.get("name");
-            }
-            catch(JSONException e) {}
 
             // Adds the beer to the list
             randomList.add(randomBeerName);
