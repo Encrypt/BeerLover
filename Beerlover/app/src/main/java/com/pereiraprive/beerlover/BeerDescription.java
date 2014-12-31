@@ -27,7 +27,7 @@ public class BeerDescription extends ActionBarActivity {
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
-    private int beerID;
+    private int beerID, userID;
     private String userToken;
 
     // Method called once the Activity is launched
@@ -82,7 +82,7 @@ public class BeerDescription extends ActionBarActivity {
         dlTask = new DownloadTask();
 
         // Retrieves the associated beer
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + beerID + ".json");
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + beerID + ".json", "TXT");
 
         try {
             webContent = dlTask.get();
@@ -119,7 +119,7 @@ public class BeerDescription extends ActionBarActivity {
 
         // Gets the picture
         dlTask = new DownloadTask();
-        dlTask.execute("GET", "http://binouze.fabrigli.fr" + pictureString);
+        dlTask.execute("GET", "http://binouze.fabrigli.fr" + pictureString, "IMG");
 
         try {
             webContent = dlTask.get();
@@ -146,13 +146,17 @@ public class BeerDescription extends ActionBarActivity {
     private void bookmarkClick() {
 
 
-        DownloadTask dltask = new DownloadTask();
+        DownloadTask dlTask = new DownloadTask();
         String content;
         JSONObject json;
 
 
         // Checks if the user has an account on the server
         if(!isUserAuth) {
+
+            // Needed objects
+            JSONObject tokenJson = null;
+            String tmpString;
 
             // Retrieves the file
             FileInputStream saveFile = null;
@@ -179,16 +183,25 @@ public class BeerDescription extends ActionBarActivity {
                 // Changes the value of the isUserAuth boolean
                 isUserAuth = true;
 
-                // Retrieves its token
-                userToken = "";
+                // Retrieves the saved data
+                tmpString = "";
                 int c;
 
                 try {
                     while ((c = saveFile.read()) != -1) {
-                        userToken = userToken + Character.toString((char) c);
+                        tmpString = tmpString + Character.toString((char) c);
                     }
                 }
                 catch (IOException e) {}
+
+                // Retrieves the ID and token from the JSON
+                try {
+                    tokenJson = new JSONObject(tmpString);
+                    userID = tokenJson.getInt("id");
+                    userToken = tokenJson.getString("token");
+                }
+                catch(JSONException e) {}
+
 
                 // Calls the bookmarkClick method again
                 bookmarkClick();
@@ -209,11 +222,10 @@ public class BeerDescription extends ActionBarActivity {
                 bookmarkButton.setBackgroundResource(R.drawable.empty_star);
 
                 // Removes the bookmark in the database
-
                 try {
-                    json = ConvertToJson(0);
+                    json = setMarkAs(0);
                     content = json.toString();
-                    dltask.execute("POST", "http://binouze.fabrigli.fr/notes.json",content);
+                    dlTask.execute("POST", "http://binouze.fabrigli.fr/notes.json", "JSON", content);
                     Toast.makeText(getBaseContext(),"La bière a été retiré des favoris", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e){}
@@ -232,9 +244,9 @@ public class BeerDescription extends ActionBarActivity {
                 // Adds the bookmark in the database
 
                 try {
-                    json = ConvertToJson(5);
+                    json = setMarkAs(5);
                     content = json.toString();
-                    dltask.execute("POST", "http://binouze.fabrigli.fr/notes.json",content);
+                    dlTask.execute("POST", "http://binouze.fabrigli.fr/notes.json", "JSON", content);
                     Toast.makeText(getBaseContext(),"La bière a été ajouté aux favoris", Toast.LENGTH_SHORT).show();
                 }
                 catch (JSONException e) {}
@@ -245,16 +257,16 @@ public class BeerDescription extends ActionBarActivity {
     }
 
     // Converts the mark to a JSON object
-    public JSONObject ConvertToJson (int value) throws JSONException {
+    public JSONObject setMarkAs (int value) throws JSONException {
 
         JSONObject json = new JSONObject();
         JSONObject userJson = new JSONObject();
         JSONObject noteJson = new JSONObject();
         noteJson.put("biere_id", beerID);
         noteJson.put("value", value);
-        userJson.put("id", 1);
+        userJson.put("id", userID);
         userJson.put("token", userToken);
-        json.put("note",noteJson);
+        json.put("note", noteJson);
         json.put("user", userJson);
         return json;
     }

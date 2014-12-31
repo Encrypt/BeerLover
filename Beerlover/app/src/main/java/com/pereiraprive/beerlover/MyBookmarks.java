@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -12,6 +15,7 @@ public class MyBookmarks extends ActionBarActivity {
 
     // Class variables
     private String userToken = null;
+    private int userID;
     private boolean isUserAuth = false;
 
     @Override
@@ -37,6 +41,10 @@ public class MyBookmarks extends ActionBarActivity {
 
     // Method to authenticate the user
     public void authUser() {
+
+        // Needed objects
+        JSONObject tokenJson = null;
+        String tmpString;
 
         // Retrieves the file
         FileInputStream saveFile = null;
@@ -64,15 +72,24 @@ public class MyBookmarks extends ActionBarActivity {
             // Changes the value of the isUserAuth boolean
             isUserAuth = true;
 
-            // Retrieves its token
-            userToken = "";
+            // Retrieves the saved data
+            tmpString = "";
             int c;
 
             try {
                 while ((c = saveFile.read()) != -1) {
-                    userToken = userToken + Character.toString((char) c);
+                    tmpString = tmpString + Character.toString((char) c);
                 }
-            } catch (IOException e) {}
+            }
+            catch (IOException e) {}
+
+            // Retrieves the ID and token from the JSON
+            try {
+                tokenJson = new JSONObject(tmpString);
+                userID = tokenJson.getInt("id");
+                userToken = tokenJson.getString("token");
+            }
+            catch(JSONException e) {}
         }
     }
 }

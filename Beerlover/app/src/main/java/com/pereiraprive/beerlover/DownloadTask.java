@@ -17,7 +17,7 @@ import java.net.URL;
 public class DownloadTask extends AsyncTask<String, Void, String> {
 
     // Class variable
-    private String webMethod, myURL, postContent;
+    private String webMethod, myURL, postContent, fileType;
 
     // Method doInBackground (called once .execute() is called)
     @Override
@@ -30,14 +30,18 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             // Retrieves the URL
             myURL = args[1];
 
+            // Retrieves the type
+            fileType = args[2];
+
             // Retrieves the POST content if there is some
-            if(args.length == 3)
-                postContent = args[2];
+            if(args.length == 4)
+                postContent = args[3];
 
             // Returns the downloaded content
             return downloadUrl();
 
         } catch (IOException e) {
+            System.out.println(e);
             return "Error while trying to download content";
         }
 
@@ -53,7 +57,15 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
 
             URL url = new URL(myURL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            // Sets the request method
             conn.setRequestMethod(webMethod);
+
+            // Set the content type (json) in case of user management
+            if(fileType.equals("JSON"))
+                conn.setRequestProperty("Content-Type", "application/json");
+
+            // Connects
             conn.connect();
 
             // If the method is post, send data
@@ -71,8 +83,8 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             int response = conn.getResponseCode();
             is = conn.getInputStream();
 
-            // Checks if the URL contains "png", "jpg"... (so if it's a picture)
-            if(myURL.contains(".jpg") || myURL.contains(".png")) {
+            // Checks if the file is a picture (filetype = IMG)
+            if(fileType.equals("IMG")) {
 
                 // Local objects
                 Bitmap bitmapBeer;

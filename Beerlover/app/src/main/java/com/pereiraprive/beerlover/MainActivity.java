@@ -56,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
 
         // Local objects
         int randomNumber;
-        Boolean alreadyExists = false;
+        Boolean alreadyExists;
         String webContent = null;
         JSONObject webJson = null;
         DownloadTask dlTask;
@@ -99,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
             randomNumber = randomNumbers[i];
 
             // Retrieves the associated beer
-            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + randomNumber +".json");
+            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + randomNumber +".json", "TXT");
 
             try {
                 webContent = dlTask.get();
