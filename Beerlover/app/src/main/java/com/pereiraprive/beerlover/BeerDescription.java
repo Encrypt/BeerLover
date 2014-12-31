@@ -144,6 +144,9 @@ public class BeerDescription extends ActionBarActivity {
     // Method called once the button has been pressed
     private void bookmarkClick() {
 
+
+        DownloadTask dltask;
+
         // Checks if the user has an account on the server
         if(!isUserAuth) {
 
@@ -202,7 +205,7 @@ public class BeerDescription extends ActionBarActivity {
                 bookmarkButton.setBackgroundResource(R.drawable.empty_star);
 
                 // Removes the bookmark in the database
-                // TODO
+                // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 0},user: {id: Y,token: userToken}})
 
 
             }
@@ -217,12 +220,22 @@ public class BeerDescription extends ActionBarActivity {
                 bookmarkButton.setBackgroundResource(R.drawable.filled_star);
 
                 // Adds the bookmark in the database
-                // TODO
+                // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 5},user: {id: Y,token: userToken}})
 
             }
 
         }
 
+    }
+
+    public JSONObject ConvertToJson (int beerID, int value, int people_id, String token) throws JSONException{
+
+        JSONObject json = new JSONObject();
+        JSONObject userJson = new JSONObject();
+        userJson.put("biere_id", beerID);
+        userJson.put("value", value);
+        json.put("note",userJson);
+        return json;
     }
 
 }
