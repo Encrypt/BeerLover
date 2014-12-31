@@ -233,26 +233,27 @@ public class BeerDescription extends ActionBarActivity {
                 // TODO Faire le JSON POUR L'envoi au serveur : {note: {biere_id: X, value: 5},user: {id: Y,token: userToken}})
 
                 try {
-                    json = ConvertToJson(beerID,5,1,userToken);
+                    json = ConvertToJson(5);
                     content = json.toString();
                     Toast.makeText(getBaseContext(),content, Toast.LENGTH_SHORT).show();
                 }
-                catch (JSONException e){}
+                catch (JSONException e) {}
             }
 
         }
 
     }
 
-    public JSONObject ConvertToJson (int beerID, int value, int people_id, String token) throws JSONException{
+    // Converts the mark to a JSON object
+    public JSONObject ConvertToJson (int value) throws JSONException {
 
         JSONObject json = new JSONObject();
         JSONObject userJson = new JSONObject();
         JSONObject noteJson = new JSONObject();
         noteJson.put("biere_id", beerID);
         noteJson.put("value", value);
-        userJson.put("id", people_id);
-        userJson.put("token", token);
+        userJson.put("id", 1);
+        userJson.put("token", userToken);
         json.put("user", userJson);
         json.put("note",noteJson);
         return json;
