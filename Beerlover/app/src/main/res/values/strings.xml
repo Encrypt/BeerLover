@@ -5,8 +5,8 @@
     <string name="fiveLastText">5 bières au hasard :</string>
     <string name="listButtonText">Accéder à la liste</string>
     <string name="ownListButtonText">Ma liste perso</string>
-    <string name="action_settings">Settings</string>
     <string name="new_text">New Text</string>
     <string name="no_entry">No entry!</string>
     <string name="filter">Filtrer</string>
+    <string name="about">\?</string>
 </resources>
