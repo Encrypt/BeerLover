@@ -3,6 +3,7 @@ package com.pereiraprive.beerlover;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import org.json.JSONArray;
@@ -56,6 +57,7 @@ public class MyBookmarks extends ActionBarActivity {
         JSONArray jsonArray = null;
         ArrayList<String> bookmarksListName = new ArrayList<String>();
         ArrayList<Integer> bookmarksListID = new ArrayList<Integer>();
+        ArrayAdapter<String> bookmarksAdapter;
 
         // Retrieves the ListView & User bookmarks
         allBookmarks = (ListView) findViewById(R.id.allBookmarks);
@@ -89,25 +91,25 @@ public class MyBookmarks extends ActionBarActivity {
 
             // Creates a new download task & retrieves the associated beer
             dlTask = new DownloadTask();
-            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" +  +".json", "TXT");
+            dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/" + bookmarksListID.get(i) +".json", "TXT");
 
             try {
                 webContent = dlTask.get();
             }
             catch(InterruptedException | ExecutionException e) {}
 
-            // Fills the JSON Object & retrieves the beer name
+            // Fills the JSON Object & adds the beer name to the ArrayList
             try {
-                // webJson = new JSONObject(webContent);
-                // randomBeerName = (String) webJson.get("name");
+                jsonObject = new JSONObject(webContent);
+                bookmarksListName.add((String) jsonObject.get("name"));
             }
-            catch(JSONException e){
-                // Nothing
-            }
-
-            // TODO : A finir
+            catch(JSONException e) {}
 
         }
+
+        // Finally, sets the List in the ListView
+        bookmarksAdapter = new ArrayAdapter<String>(this, R.layout.simple_list, bookmarksListName);
+        allBookmarks.setAdapter(bookmarksAdapter);
 
     }
 
