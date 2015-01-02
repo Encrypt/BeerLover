@@ -29,19 +29,18 @@ public class BeerList extends ActionBarActivity {
     private List<String> viewParents;
     private HashMap<String, List<String>> viewChildren;
 
-
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Set the "beer_list" content
+        setContentView(R.layout.beer_list);
 
         // Immediately starts downloading the complete JSON
         downloadAllBeers();
 
         // Retrieves the ExpendableListView view
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
-
-        // Set the "beer_list" content
-        setContentView(R.layout.beer_list);
 
         // Fill the ExpendableView
         fillView();
@@ -57,7 +56,7 @@ public class BeerList extends ActionBarActivity {
             }
         });
 
-        // Listview Group collasped listener
+        // Listview Group collapsed listener
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
 
             @Override
@@ -105,7 +104,7 @@ public class BeerList extends ActionBarActivity {
         // Creates a new categoryID List
         categoryID = new ArrayList<Integer>();
 
-        // Downloads the beers to fill the Expandable Listview
+        // Downloads the beers to fill the Expandable ListView
         dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json", "TXT");
 
         try {
