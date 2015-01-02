@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -108,7 +109,7 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
                 result = readText(is, 1000);
 
             else if(fileType.equals("BTXT"))
-                result = readText(is, 100000);
+                result = readText(is, 20000);
 
 
         }
@@ -125,11 +126,15 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
 
     // Method to read "len" length of the content
     private String readText(InputStream stream, int len) throws IOException {
-        Reader reader;
-        reader = new InputStreamReader(stream, "UTF-8");
-        char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+
+        // Creates a buffered reader (which is more convenient to the previous byte usage)
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"), len);
+
+        // Reads the line (the JSON) and returns the string
+        String string = br.readLine();
+
+        return string;
+
     }
 
 }

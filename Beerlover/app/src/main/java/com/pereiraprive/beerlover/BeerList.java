@@ -1,16 +1,12 @@
 package com.pereiraprive.beerlover;
 
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
+
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.SimpleExpandableListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -51,7 +47,7 @@ public class BeerList extends ActionBarActivity {
         DownloadTask dlTask = new DownloadTask();
         JSONObject jsonObject = null;
         JSONArray jsonArray = null;
-        String webContent = null;
+        String webContent = new String();
         ExpandableListAdapter expandableListAdapter;
         List<String> viewParents;
         List<ArrayList<String>> parentsList = null;
@@ -66,7 +62,7 @@ public class BeerList extends ActionBarActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         // Downloads the beers to fill the Expandable Listview
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json" ,"text");
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json", "TXT");
 
         try {
             webContent = dlTask.get();
@@ -79,8 +75,9 @@ public class BeerList extends ActionBarActivity {
         catch (JSONException e){}
 
         // Creates the parents and children lists
-        viewParents = new ArrayList<String>();
-        viewChildren = new HashMap<String, List<String>>();
+        parentsList = new ArrayList<>();
+        viewParents = new ArrayList<>();
+        viewChildren = new HashMap<>();
 
         // Fills the parents thanks to the previously downloaded JSON
         try {
@@ -163,7 +160,7 @@ public class BeerList extends ActionBarActivity {
         DownloadTask dlTask;
         JSONArray jsonArray;
         JSONObject jsonObject, jsonOrigin;
-        String jsonString = null;
+        String jsonString = new String();
 
         // Creates the new beer objects
         beerID = new ArrayList<Integer>();

@@ -62,8 +62,16 @@ public class MainActivity extends ActionBarActivity {
     public void displayBeerList(View v) {
 
         // Displays the list of the beers
+
         Intent i = new Intent(getApplicationContext(), BeerList.class);
         startActivity(i);
+
+/*
+        DownloadTask dlTask = new DownloadTask();
+        String string = new String();
+
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres.json", "BTXT");
+*/
     }
 
     // Method to go to the bookmarked beers
