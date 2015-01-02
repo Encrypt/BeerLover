@@ -11,7 +11,7 @@ public class LoadingBeerList {
 
         protected void onPreExecute(Activity activity) {
 
-            nDialog = new ProgressDialog(activity); //Here I get an error: The constructor ProgressDialog(PFragment) is undefined
+            nDialog = new ProgressDialog(activity);
             nDialog.setMessage("Loading..");
             nDialog.setTitle("Checking Network");
             nDialog.setIndeterminate(false);
@@ -19,5 +19,4 @@ public class LoadingBeerList {
             nDialog.show();
 
         }
-    }
 }
