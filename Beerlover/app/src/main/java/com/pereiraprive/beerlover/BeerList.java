@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import android.view.View;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +26,9 @@ public class BeerList extends ActionBarActivity {
     private ArrayList<Integer> beerID, beerTypeID, beerOriginID, categoryID;
     private ArrayList<String> beerName;
     private ExpandableListView expandableListView;
+    private List<String> viewParents;
+    private HashMap<String, List<String>> viewChildren;
+
 
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,12 +37,56 @@ public class BeerList extends ActionBarActivity {
         // Immediately starts downloading the complete JSON
         downloadAllBeers();
 
+        // Retrieves the ExpendableListView view
+        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
+
         // Set the "beer_list" content
         setContentView(R.layout.beer_list);
 
         // Fill the ExpendableView
         fillView();
 
+        // Listview Group expanded listener
+        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
+
+            @Override
+            public void onGroupExpand(int groupPosition) {
+                Toast.makeText(getApplicationContext(),
+                        viewParents.get(groupPosition) + " Expanded",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Listview Group collasped listener
+        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
+
+            @Override
+            public void onGroupCollapse(int groupPosition) {
+                Toast.makeText(getApplicationContext(),
+                        viewParents.get(groupPosition) + " Collapsed",
+                        Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        // Listview on child click listener
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v,
+                                        int groupPosition, int childPosition, long id) {
+                // TODO Auto-generated method stub
+                Toast.makeText(
+                        getApplicationContext(),
+                        viewParents.get(groupPosition)
+                                + " : "
+                                + viewChildren.get(
+                                viewParents.get(groupPosition)).get(
+                                childPosition), Toast.LENGTH_SHORT)
+                        .show();
+                return false;
+            }
+        });
     }
 
     // Method to fill the expendable View
@@ -49,17 +98,12 @@ public class BeerList extends ActionBarActivity {
         JSONArray jsonArray = null;
         String webContent = new String();
         ExpandableListAdapter expandableListAdapter;
-        List<String> viewParents;
         List<ArrayList<String>> parentsList = null;
         ArrayList<String> tmpList;
-        HashMap<String, List<String>> viewChildren;
         int tmpId;
 
         // Creates a new categoryID List
         categoryID = new ArrayList<Integer>();
-
-        // Retrieves the ExpendableListView view
-        expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         // Downloads the beers to fill the Expandable Listview
         dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json", "TXT");
