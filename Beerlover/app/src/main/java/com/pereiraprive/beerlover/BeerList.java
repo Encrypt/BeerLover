@@ -88,6 +88,30 @@ public class BeerList extends ActionBarActivity {
         });
     }
 
+    // The menu: Filter option
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_beerlist, menu);
+        return true;
+    }
+
+    // Creates the menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        // Gets the id
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.filter) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     // Method to fill the expendable View
     private void fillView() {
 
@@ -104,7 +128,7 @@ public class BeerList extends ActionBarActivity {
         // Creates a new categoryID List
         categoryID = new ArrayList<Integer>();
 
-        // Downloads the beers to fill the Expandable ListView
+        // Downloads the beers category to fill the Expandable ListView
         dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json", "TXT");
 
         try {
@@ -144,6 +168,17 @@ public class BeerList extends ActionBarActivity {
 
         catch (JSONException e) {}
 
+        // Retrieves the kind of filter to apply
+        ArrayList<Integer> filterApplied;
+        if(currentSort.equals("categories"))
+            filterApplied = beerTypeID;
+        else
+            filterApplied = beerOriginID;
+
+        System.out.println("Taille de filterApplied = " + filterApplied.size());
+        System.out.println("Taille de beerID = " + beerID.size());
+
+
         // Fills the children thanks to the global JSON
         for(int i = 0 ; i < categoryID.size() ; i++) {
 
@@ -156,10 +191,12 @@ public class BeerList extends ActionBarActivity {
             // Retrieves all the beers from that category
             for(int j = 0 ; j < beerID.size() ; j++) {
 
-                // If the given beer belongs to the category, adds it in the list
-                if(beerID.get(j) == tmpId) {
+                System.out.println("Valeur de beerID : " + beerID.get(j) + " / Valeur de tmpId : " + tmpId);
+
+                // If the given beer belongs to the category, adds it in the list (depends on the category)
+                if(filterApplied.get(j) == tmpId)
                     tmpList.add(beerName.get(j));
-                }
+
             }
         }
 
@@ -172,28 +209,6 @@ public class BeerList extends ActionBarActivity {
         expandableListAdapter = new CustomExpListAdapter(this, viewParents, viewChildren);
         expandableListView.setAdapter(expandableListAdapter);
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_beerlist, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        // Gets the id
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.filter) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     // Downloads the complete JSON and puts it in the variable
@@ -233,7 +248,7 @@ public class BeerList extends ActionBarActivity {
                 jsonObject = jsonArray.getJSONObject(i);
 
                 // Retrieves the name, category and ID of the beer to put it in the ArrayLists
-                beerID.add(jsonObject.getInt("biere_id"));
+                beerID.add(jsonObject.getInt("id"));
                 beerTypeID.add(jsonObject.getInt("category_id"));
                 beerName.add(jsonObject.getString("name"));
 
