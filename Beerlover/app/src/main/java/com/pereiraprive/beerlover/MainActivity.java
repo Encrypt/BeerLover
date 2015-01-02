@@ -1,7 +1,6 @@
 package com.pereiraprive.beerlover;
 
 import android.app.ProgressDialog;
-import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -10,16 +9,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 import android.content.Intent;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends ActionBarActivity {
@@ -37,25 +32,6 @@ public class MainActivity extends ActionBarActivity {
         // Fills the random list
         fillRandomList();
 
-    }
-
-    public void ShowProgressRing() {
-
-        final ProgressDialog ringProgressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Downloading files ...", true);
-        ringProgressDialog.setCancelable(true);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1);
-
-                } catch (InterruptedException e) {
-                    ringProgressDialog.dismiss();
-                }
-            }
-
-        }).start();
     }
 
     // Creates the menu
@@ -106,6 +82,26 @@ public class MainActivity extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(), MyBookmarks.class);
         startActivity(i);
 
+    }
+
+    // Method showing a progress ring while the BeerList is being processed
+    public void ShowProgressRing() {
+
+        final ProgressDialog ringProgressDialog = ProgressDialog.show(MainActivity.this, "Veuillez patienter", "Téléchargement et création de la liste", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1);
+
+                } catch (InterruptedException e) {
+                    ringProgressDialog.dismiss();
+                }
+            }
+
+        }).start();
     }
 
     // Method top fill the 5 last beer discoveries
