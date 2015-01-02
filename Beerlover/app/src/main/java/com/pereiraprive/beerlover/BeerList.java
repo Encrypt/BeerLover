@@ -7,9 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.view.View;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +35,8 @@ public class BeerList extends ActionBarActivity {
 
         // Set the "beer_list" content
         setContentView(R.layout.beer_list);
+
+        new LoadingBeerList();
 
         // Immediately starts downloading the complete JSON
         downloadAllBeers();
@@ -177,6 +177,12 @@ public class BeerList extends ActionBarActivity {
 
         catch (JSONException e) {}
 
+        // Adds the "Uncategorized" category
+        viewParents.add("Non classé");
+        categoryID.add(-1);
+        tmpList = new ArrayList<String>();
+        parentsList.add(tmpList);
+
         // Retrieves the kind of filter to apply
         ArrayList<Integer> filterApplied;
         if(currentSort.equals("categories"))
@@ -280,7 +286,7 @@ public class BeerList extends ActionBarActivity {
                 beerNameTmp = jsonObject.getString("name");
             }
             catch(JSONException e) {
-                beerNameTmp = "No name";
+                beerNameTmp = "Sans nom";
             }
 
             try {
