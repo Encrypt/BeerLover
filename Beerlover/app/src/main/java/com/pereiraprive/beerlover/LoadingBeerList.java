@@ -2,21 +2,32 @@ package com.pereiraprive.beerlover;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-
+import android.view.View;
 
 
 public class LoadingBeerList {
 
-        private ProgressDialog nDialog;
+    private boolean dlFinish = false;
 
-        protected void onPreExecute(Activity activity) {
+    public void setBoolean(boolean dlFinish)
+    {
+        this.dlFinish = dlFinish;
+    }
 
-            nDialog = new ProgressDialog(activity);
-            nDialog.setMessage("Loading..");
-            nDialog.setTitle("Checking Network");
-            nDialog.setIndeterminate(false);
-            nDialog.setCancelable(true);
-            nDialog.show();
+    public void LoadingBeerList(Activity activity) {
+        final ProgressDialog ringProgressDialog = ProgressDialog.show(activity, "Please wait ...", "Downloading files ...", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(15000);
 
-        }
+                } catch (InterruptedException e) {
+                    ringProgressDialog.dismiss();
+            }
+            }
+        }).start();
+    }
+
 }

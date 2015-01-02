@@ -30,10 +30,10 @@ public class CreditDialogFragment extends DialogFragment {
         String title = getArguments().getString("title");
         String message = getArguments().getString("message");
         Dialog myDialog = new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.beer)
+                .setIcon(R.drawable.beer_bw)
                 .setTitle(title)
                 .setMessage(message)
-                .setNegativeButton("Cancel",
+                .setNegativeButton("Fermer",
                         new DialogInterface.OnClickListener() {
 
                             @Override

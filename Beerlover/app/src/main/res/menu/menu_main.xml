@@ -6,6 +6,7 @@
     <item
         android:id="@+id/about"
         android:title="@string/about"
+        android:icon="@drawable/about"
         beerlover:showAsAction="always"
         android:orderInCategory="100" />
 
