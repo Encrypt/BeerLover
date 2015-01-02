@@ -1,23 +1,31 @@
 package com.pereiraprive.beerlover;
 
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.SimpleExpandableListAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class BeerList extends ActionBarActivity {
 
     // Needed objects for this view
-    private String currentSort = "Type";
-    private ArrayList<Integer> beerID, beerTypeID, beerOriginID;
+    private String currentSort = "categories";
+    private ArrayList<Integer> beerID, beerTypeID, beerOriginID, categoryID;
     private ArrayList<String> beerName;
     private ExpandableListView expandableListView;
 
@@ -40,14 +48,89 @@ public class BeerList extends ActionBarActivity {
     private void fillView() {
 
         // Local objects
-        JSONObject jsonCategories = null;
+        DownloadTask dlTask = new DownloadTask();
+        JSONObject jsonObject = null;
+        JSONArray jsonArray = null;
+        String webContent = null;
+        ExpandableListAdapter expandableListAdapter;
+        List<String> viewParents;
+        List<ArrayList<String>> parentsList = null;
+        ArrayList<String> tmpList;
+        HashMap<String, List<String>> viewChildren;
+        int tmpId;
+
+        // Creates a new categoryID List
+        categoryID = new ArrayList<Integer>();
 
         // Retrieves the ExpendableListView view
         expandableListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
-        // Retrieves the categories
-        jsonCategories = DownloadCategory();
+        // Downloads the beers to fill the Expandable Listview
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json" ,"text");
 
+        try {
+            webContent = dlTask.get();
+        }
+        catch(InterruptedException | ExecutionException e) {}
+
+        try {
+            jsonArray = new JSONArray(webContent);
+        }
+        catch (JSONException e){}
+
+        // Creates the parents and children lists
+        viewParents = new ArrayList<String>();
+        viewChildren = new HashMap<String, List<String>>();
+
+        // Fills the parents thanks to the previously downloaded JSON
+        try {
+
+            for(int i = 0 ; i < jsonArray.length() ; i++) {
+
+                // Takes the next JSON Object
+                jsonObject = jsonArray.getJSONObject(i);
+
+                // Retrieves its name & ID ; and puts it in the list
+                viewParents.add(jsonObject.getString("name"));
+                categoryID.add(jsonObject.getInt("id"));
+
+                // Creates a new List corresponding to the parent & adds it to the List of List
+                tmpList = new ArrayList<String>();
+                parentsList.add(tmpList);
+
+            }
+
+        }
+
+        catch (JSONException e) {}
+
+        // Fills the children thanks to the global JSON
+        for(int i = 0 ; i < categoryID.size() ; i++) {
+
+            // Gets the id of the category
+            tmpId = categoryID.get(i);
+
+            // Gets the parents-associated list
+            tmpList = parentsList.get(i);
+
+            // Retrieves all the beers from that category
+            for(int j = 0 ; j < beerID.size() ; j++) {
+
+                // If the given beer belongs to the category, adds it in the list
+                if(beerID.get(j) == tmpId) {
+                    tmpList.add(beerName.get(j));
+                }
+            }
+        }
+
+        // Finally, populates the HashMap
+        for(int i = 0 ; i < viewParents.size() ; i++)
+            viewChildren.put(viewParents.get(i), parentsList.get(i));
+
+
+        // And now, sets the ListAdapter
+        expandableListAdapter = new CustomExpListAdapter(this, viewParents, viewChildren);
+        expandableListView.setAdapter(expandableListAdapter);
 
     }
 
@@ -82,11 +165,17 @@ public class BeerList extends ActionBarActivity {
         JSONObject jsonObject, jsonOrigin;
         String jsonString = null;
 
+        // Creates the new beer objects
+        beerID = new ArrayList<Integer>();
+        beerTypeID = new ArrayList<Integer>();
+        beerOriginID = new ArrayList<Integer>();
+        beerName = new ArrayList<String>();
+
         // Creates a new download task with the appropriate random value
         dlTask = new DownloadTask();
 
         // Retrieves all the beers
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres/bieres.json", "TXT");
+        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres.json", "BTXT");
 
         try {
             jsonString = dlTask.get();
@@ -119,27 +208,4 @@ public class BeerList extends ActionBarActivity {
 
     }
 
-    // Method to download the JSON associated to the category
-    private JSONObject DownloadCategory() {
-
-        DownloadTask dlTask = new DownloadTask();
-        JSONObject jsonCategory = null;
-        String webContent = null;
-
-        // Downloads the beers to fill the Expandable Listview
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/" + currentSort + ".json" ,"text");
-
-        try {
-
-            webContent = dlTask.get();
-        }
-        catch(InterruptedException | ExecutionException e) {}
-
-        try{
-            jsonCategory = new JSONObject(webContent);
-        }
-        catch (JSONException e){}
-
-        return jsonCategory;
-    }
 }

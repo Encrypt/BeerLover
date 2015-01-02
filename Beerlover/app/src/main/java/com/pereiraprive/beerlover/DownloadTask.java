@@ -52,6 +52,7 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
 
         // Method objects
         InputStream is = null;
+        String result = "Erreur";
 
         try {
 
@@ -99,12 +100,16 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
                 byteBeer = byteOS.toByteArray();
                 stringBeer = Base64.encodeToString(byteBeer, Base64.DEFAULT);
 
-                return stringBeer;
+                result = stringBeer;
             }
 
             // Else, it's simply text, returns the content downloaded
-            else
-                return readText(is, 1000);
+            else if(fileType.equals("TXT"))
+                result = readText(is, 1000);
+
+            else if(fileType.equals("BTXT"))
+                result = readText(is, 100000);
+
 
         }
 
@@ -113,6 +118,8 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
                 is.close();
             }
         }
+
+        return result;
 
     }
 
