@@ -11,11 +11,11 @@
 
         <menu>
             <item android:id="@+id/sortType"
-                  android:icon="@drawable/no_image"
+                  android:icon="@drawable/beer_bw"
                   android:title="Type"/>
 
             <item android:id="@+id/sortCountry"
-                  android:icon="@drawable/no_image"
+                  android:icon="@drawable/flag"
                   android:title="Origine" />
         </menu>
     </item>
