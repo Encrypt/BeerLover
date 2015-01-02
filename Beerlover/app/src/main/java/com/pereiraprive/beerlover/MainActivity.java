@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import android.content.Intent;
@@ -34,6 +35,26 @@ public class MainActivity extends ActionBarActivity {
 
         // Fills the random list
         fillRandomList();
+        Button buttonOpenDialog = (Button)findViewById(R.id.about);
+        buttonOpenDialog.setOnClickListener(new Button.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                OpenDialog();
+            }
+        });
+
+    }
+
+    void OpenDialog(){
+        CreditDialogFragment myDialogFragment = CreditDialogFragment.newInstance();
+        myDialogFragment.show(getFragmentManager(), "Credits");
+    }
+
+    public void cancelClicked() {
+        Toast.makeText(MainActivity.this,
+                "Cancel Clicked!",
+                Toast.LENGTH_LONG).show();
     }
 
     @Override
