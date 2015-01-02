@@ -29,6 +29,7 @@ public class BeerList extends ActionBarActivity {
     private ExpandableListView expandableListView;
     private List<String> viewParents;
     private HashMap<String, List<String>> viewChildren;
+    private CustomExpListAdapter expandableListAdapter;
 
     // Method called once the Activity is launched
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,46 +46,12 @@ public class BeerList extends ActionBarActivity {
 
         // Fill the ExpendableView
         fillView();
-/*
-        // Listview Group expanded listener
-        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
-            @Override
-            public void onGroupExpand(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        viewParents.get(groupPosition) + " Expanded",
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Listview Group collapsed listener
-        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-
-            @Override
-            public void onGroupCollapse(int groupPosition) {
-                Toast.makeText(getApplicationContext(),
-                        viewParents.get(groupPosition) + " Collapsed",
-                        Toast.LENGTH_SHORT).show();
-
-            }
-        });
-*/
-        // Listview on child click listener
+        // ListView on child click listener
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v,
-                                        int groupPosition, int childPosition, long id) {
-                // TODO Auto-generated method stub
-                /*Toast.makeText(
-                        getApplicationContext(),
-                        viewParents.get(groupPosition)
-                                + " : "
-                                + viewChildren.get(
-                                viewParents.get(groupPosition)).get(
-                                childPosition), Toast.LENGTH_SHORT)
-                        .show();
-                */
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 // Returns the beer description
                 describeBeer(viewChildren.get(viewParents.get(groupPosition)).get(childPosition));
@@ -94,7 +61,7 @@ public class BeerList extends ActionBarActivity {
         });
     }
 
-    // The menu: Filter option
+    // Creates the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -103,7 +70,7 @@ public class BeerList extends ActionBarActivity {
         return true;
     }
 
-    // Creates the menu
+    // Called once a button has been clicked in the ActionBar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -113,6 +80,23 @@ public class BeerList extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.filter) {
             return true;
+        }
+
+        else {
+
+            // Sets the appropriate sorting type
+            if (id == R.id.sortType)
+                currentSort = "categories";
+
+            if (id == R.id.sortCountry)
+                currentSort = "countries";
+
+            // Notifies the Adapter to refresh itself
+            expandableListView.setAdapter(new CustomExpListAdapter(this, new ArrayList<String>(), new HashMap<String, List<String>>()));
+
+            // Re-completes the view
+            fillView();
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -138,7 +122,6 @@ public class BeerList extends ActionBarActivity {
 
     }
 
-
     // Method to fill the expendable View
     private void fillView() {
 
@@ -147,7 +130,6 @@ public class BeerList extends ActionBarActivity {
         JSONObject jsonObject = null;
         JSONArray jsonArray = null;
         String webContent = new String();
-        ExpandableListAdapter expandableListAdapter;
         List<ArrayList<String>> parentsList = null;
         ArrayList<String> tmpList;
         int tmpId;
@@ -201,11 +183,6 @@ public class BeerList extends ActionBarActivity {
             filterApplied = beerTypeID;
         else
             filterApplied = beerOriginID;
-
-        // System.out.println("Taille de filterApplied = " + filterApplied.size());
-        // System.out.println("Taille de beerID = " + beerID.size());
-        // System.out.println("filterApplied = " + filterApplied);
-
 
         // Fills the children thanks to the global JSON
         for(int i = 0 ; i < categoryID.size() ; i++) {
@@ -320,12 +297,7 @@ public class BeerList extends ActionBarActivity {
             beerName.add(beerNameTmp);
             beerOriginID.add(beerOriginTmp);
 
-            // System.out.println("beerID : " + beerID.get(i) + " / beerTypeID : " + beerTypeID.get(i) + " / beerName : " + beerName.get(i) + " / beerOriginID" + beerOriginID.get(i));
         }
-
-            // System.out.println("beerID : " + beerID);
-
-        // System.out.println("beerID : " + beerID.size() + " / beerTypeID : " + beerTypeID.size() + " / beerName : " + beerName.size() + " / beerOriginID" + beerOriginID.size());
 
     }
 
