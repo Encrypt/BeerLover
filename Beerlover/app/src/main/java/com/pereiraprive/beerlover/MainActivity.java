@@ -81,7 +81,6 @@ public class MainActivity extends ActionBarActivity {
     public void displayBeerList(View v) {
 
         // Displays the list of the beers
-
         Intent i = new Intent(getApplicationContext(), BeerList.class);
         startActivity(i);
 
@@ -90,7 +89,7 @@ public class MainActivity extends ActionBarActivity {
     // Method to go to the bookmarked beers
     public void displayBookmarks(View v){
 
-        // Displays the list of the beers
+        // Displays the bookmarked beers
         Intent i = new Intent(getApplicationContext(), MyBookmarks.class);
         startActivity(i);
 

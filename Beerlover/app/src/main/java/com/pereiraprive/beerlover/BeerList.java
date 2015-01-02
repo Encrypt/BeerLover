@@ -1,5 +1,6 @@
 package com.pereiraprive.beerlover;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -44,7 +45,7 @@ public class BeerList extends ActionBarActivity {
 
         // Fill the ExpendableView
         fillView();
-
+/*
         // Listview Group expanded listener
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
 
@@ -67,7 +68,7 @@ public class BeerList extends ActionBarActivity {
 
             }
         });
-
+*/
         // Listview on child click listener
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
@@ -75,7 +76,7 @@ public class BeerList extends ActionBarActivity {
             public boolean onChildClick(ExpandableListView parent, View v,
                                         int groupPosition, int childPosition, long id) {
                 // TODO Auto-generated method stub
-                Toast.makeText(
+                /*Toast.makeText(
                         getApplicationContext(),
                         viewParents.get(groupPosition)
                                 + " : "
@@ -83,6 +84,11 @@ public class BeerList extends ActionBarActivity {
                                 viewParents.get(groupPosition)).get(
                                 childPosition), Toast.LENGTH_SHORT)
                         .show();
+                */
+
+                // Returns the beer description
+                describeBeer(viewChildren.get(viewParents.get(groupPosition)).get(childPosition));
+
                 return false;
             }
         });
@@ -111,6 +117,27 @@ public class BeerList extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    // Method to display a beer
+    private void describeBeer(String clickedBeer) {
+
+        // Goes through the list of beers
+        int i = 0;
+        while(!beerName.get(i).equals(clickedBeer))
+            i++;
+
+        // Then retrieves its ID
+        int clickedBeerId = beerID.get(i);
+
+        // Create a new intent & passes the beer ID
+        Intent intent = new Intent(getApplicationContext(),BeerDescription.class);
+        intent.putExtra("beerID", clickedBeerId);
+
+        // Starts the activity
+        startActivity(intent);
+
+    }
+
 
     // Method to fill the expendable View
     private void fillView() {
@@ -175,8 +202,9 @@ public class BeerList extends ActionBarActivity {
         else
             filterApplied = beerOriginID;
 
-        System.out.println("Taille de filterApplied = " + filterApplied.size());
-        System.out.println("Taille de beerID = " + beerID.size());
+        // System.out.println("Taille de filterApplied = " + filterApplied.size());
+        // System.out.println("Taille de beerID = " + beerID.size());
+        // System.out.println("filterApplied = " + filterApplied);
 
 
         // Fills the children thanks to the global JSON
@@ -191,7 +219,7 @@ public class BeerList extends ActionBarActivity {
             // Retrieves all the beers from that category
             for(int j = 0 ; j < beerID.size() ; j++) {
 
-                System.out.println("Valeur de beerID : " + beerID.get(j) + " / Valeur de tmpId : " + tmpId);
+                // System.out.println("Valeur de beerID : " + beerID.get(j) + " / Valeur de tmpId : " + tmpId);
 
                 // If the given beer belongs to the category, adds it in the list (depends on the category)
                 if(filterApplied.get(j) == tmpId)
@@ -216,8 +244,8 @@ public class BeerList extends ActionBarActivity {
 
         // Local objects
         DownloadTask dlTask;
-        JSONArray jsonArray;
-        JSONObject jsonObject, jsonOrigin;
+        JSONArray jsonArray = null;
+        JSONObject jsonObject = null, jsonOrigin;
         String jsonString = new String();
 
         // Creates the new beer objects
@@ -237,29 +265,67 @@ public class BeerList extends ActionBarActivity {
         }
         catch(InterruptedException | ExecutionException e) {}
 
-        // Parse the beers
+        // Retrieves the JSONArray
         try {
-
             jsonArray = new JSONArray(jsonString);
+        }
+        catch(JSONException e) {}
 
-            for(int i = 0 ; i < jsonArray.length() ; i++) {
+        // Pareses the beers
+        for(int i = 0 ; i < jsonArray.length() ; i++) {
 
-                // Takes the next JSON Object
+            // Takes the next JSON Object
+            try {
                 jsonObject = jsonArray.getJSONObject(i);
-
-                // Retrieves the name, category and ID of the beer to put it in the ArrayLists
-                beerID.add(jsonObject.getInt("id"));
-                beerTypeID.add(jsonObject.getInt("category_id"));
-                beerName.add(jsonObject.getString("name"));
-
-                // Retrieves the ID of the origin
-                jsonOrigin = jsonObject.getJSONObject("country");
-                beerOriginID.add(jsonOrigin.getInt("id"));
-
             }
+            catch (JSONException e) {}
+
+            // Fills the Array
+            int beerIdTmp, beerTypeIdTmp, beerOriginTmp;
+            String beerNameTmp;
+
+            // Retrieves the name, category and ID of the beer to put it in the ArrayLists
+            try {
+                beerIdTmp = jsonObject.getInt("id");
+            }
+            catch(JSONException e) {
+                beerIdTmp = -1;
+            }
+
+            try {
+                beerTypeIdTmp = jsonObject.getInt("category_id");
+            }
+            catch(JSONException e) {
+                beerTypeIdTmp = -1;
+            }
+
+            try {
+                beerNameTmp = jsonObject.getString("name");
+            }
+            catch(JSONException e) {
+                beerNameTmp = "No name";
+            }
+
+            try {
+                jsonOrigin = jsonObject.getJSONObject("country");
+                beerOriginTmp = jsonOrigin.getInt("id");
+            }
+            catch(JSONException e) {
+                beerOriginTmp = -1;
+            }
+
+            // Copies it in the ArrayLists
+            beerID.add(beerIdTmp);
+            beerTypeID.add(beerTypeIdTmp);
+            beerName.add(beerNameTmp);
+            beerOriginID.add(beerOriginTmp);
+
+            // System.out.println("beerID : " + beerID.get(i) + " / beerTypeID : " + beerTypeID.get(i) + " / beerName : " + beerName.get(i) + " / beerOriginID" + beerOriginID.get(i));
         }
 
-        catch(JSONException e) {}
+            // System.out.println("beerID : " + beerID);
+
+        // System.out.println("beerID : " + beerID.size() + " / beerTypeID : " + beerTypeID.size() + " / beerName : " + beerName.size() + " / beerOriginID" + beerOriginID.size());
 
     }
 
