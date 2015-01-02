@@ -35,6 +35,8 @@ public class MainActivity extends ActionBarActivity {
 
         // Fills the random list
         fillRandomList();
+
+        /*
         Button buttonOpenDialog = (Button)findViewById(R.id.about);
         buttonOpenDialog.setOnClickListener(new Button.OnClickListener() {
 
@@ -43,20 +45,10 @@ public class MainActivity extends ActionBarActivity {
                 OpenDialog();
             }
         });
-
+*/
     }
 
-    void OpenDialog(){
-        CreditDialogFragment myDialogFragment = CreditDialogFragment.newInstance();
-        myDialogFragment.show(getFragmentManager(), "Credits");
-    }
-
-    public void cancelClicked() {
-        Toast.makeText(MainActivity.this,
-                "Cancel Clicked!",
-                Toast.LENGTH_LONG).show();
-    }
-
+    // Creates the menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -65,6 +57,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    // Method used with the "About" section
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -73,6 +66,11 @@ public class MainActivity extends ActionBarActivity {
 
         // Calls the about method
         if (id == R.id.about) {
+
+            // Makes the Fragment
+            CreditDialogFragment myDialogFragment = CreditDialogFragment.newInstance();
+            myDialogFragment.show(getFragmentManager(), "Credits");
+
             return true;
         }
 
@@ -87,12 +85,6 @@ public class MainActivity extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(), BeerList.class);
         startActivity(i);
 
-/*
-        DownloadTask dlTask = new DownloadTask();
-        String string = new String();
-
-        dlTask.execute("GET", "http://binouze.fabrigli.fr/bieres.json", "BTXT");
-*/
     }
 
     // Method to go to the bookmarked beers
@@ -101,12 +93,6 @@ public class MainActivity extends ActionBarActivity {
         // Displays the list of the beers
         Intent i = new Intent(getApplicationContext(), MyBookmarks.class);
         startActivity(i);
-
-    }
-
-    // Method called when the users presses the "about" button
-    public void about() {
-
 
     }
 
