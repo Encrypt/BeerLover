@@ -12,10 +12,11 @@ public class CreditDialogFragment extends DialogFragment {
     static CreditDialogFragment newInstance() {
 
         String title = "Credits";
-
+        String message = "Projet Mobile INF4042\n"+ "Yann Privé & Patrick Pereira\n" + "Licence WTFPL @Binouze\n2014-2015";
         CreditDialogFragment f = new CreditDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
+        args.putString("message", message);
         f.setArguments(args);
         return f;
     }
@@ -27,9 +28,11 @@ public class CreditDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         String title = getArguments().getString("title");
+        String message = getArguments().getString("message");
         Dialog myDialog = new AlertDialog.Builder(getActivity())
-                .setIcon(R.drawable.ic_launcher)
+                .setIcon(R.drawable.beer)
                 .setTitle(title)
+                .setMessage(message)
                 .setNegativeButton("Cancel",
                         new DialogInterface.OnClickListener() {
 
