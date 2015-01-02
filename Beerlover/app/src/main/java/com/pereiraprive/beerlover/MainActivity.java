@@ -1,5 +1,6 @@
 package com.pereiraprive.beerlover;
 
+import android.app.ProgressDialog;
 import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -36,16 +37,25 @@ public class MainActivity extends ActionBarActivity {
         // Fills the random list
         fillRandomList();
 
-        /*
-        Button buttonOpenDialog = (Button)findViewById(R.id.about);
-        buttonOpenDialog.setOnClickListener(new Button.OnClickListener() {
+    }
+
+    public void ShowProgressRing() {
+
+        final ProgressDialog ringProgressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Downloading files ...", true);
+        ringProgressDialog.setCancelable(true);
+        new Thread(new Runnable() {
 
             @Override
-            public void onClick(View arg0) {
-                OpenDialog();
+            public void run() {
+                try {
+                    Thread.sleep(1);
+
+                } catch (InterruptedException e) {
+                    ringProgressDialog.dismiss();
+                }
             }
-        });
-*/
+
+        }).start();
     }
 
     // Creates the menu
@@ -79,6 +89,9 @@ public class MainActivity extends ActionBarActivity {
 
     // Method to go to the list of beers
     public void displayBeerList(View v) {
+
+        // Creates a "Loading" window
+        ShowProgressRing();
 
         // Displays the list of the beers
         Intent i = new Intent(getApplicationContext(), BeerList.class);
@@ -191,6 +204,5 @@ public class MainActivity extends ActionBarActivity {
         startActivity(intent);
 
     }
-
 
 }

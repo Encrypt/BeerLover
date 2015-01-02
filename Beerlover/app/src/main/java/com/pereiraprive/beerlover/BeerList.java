@@ -36,8 +36,6 @@ public class BeerList extends ActionBarActivity {
         // Set the "beer_list" content
         setContentView(R.layout.beer_list);
 
-        new LoadingBeerList();
-
         // Immediately starts downloading the complete JSON
         downloadAllBeers();
 
