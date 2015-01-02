@@ -11,13 +11,17 @@ public class CreditDialogFragment extends DialogFragment {
 
     static CreditDialogFragment newInstance() {
 
-        String title = "My Fragment";
+        String title = "Credits";
 
         CreditDialogFragment f = new CreditDialogFragment();
         Bundle args = new Bundle();
         args.putString("title", title);
         f.setArguments(args);
         return f;
+    }
+
+    private void cancelClicked(){
+
     }
 
     @Override
@@ -31,7 +35,7 @@ public class CreditDialogFragment extends DialogFragment {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                ((MainActivity)getActivity()).cancelClicked();
+                                cancelClicked();
                             }
                         })
                 .create();
