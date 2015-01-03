@@ -67,6 +67,7 @@ public class MyBookmarks extends ActionBarActivity {
         JSONObject jsonObject = null, tmpJson = null;
         JSONArray jsonArray = null;
         ArrayAdapter<String> bookmarksAdapter;
+        boolean alreadyInList = false;
 
         // Retrieves the bookmarked beers
         dlTask = new DownloadTask();
@@ -85,9 +86,28 @@ public class MyBookmarks extends ActionBarActivity {
                 // Takes the next JSON Object
                 jsonObject = jsonArray.getJSONObject(i);
 
-                // Retrieves its name and put it in the list
-                bookmarksListID.add(jsonObject.getInt("biere_id"));
+                // Goes through the actual ArrayList looking for duplicates
+                for(int j = 0 ; j < bookmarksListID.size() ; j++) {
 
+                    // If the beer is already in the list...
+                    if(bookmarksListID.get(j) == jsonObject.getInt("biere_id")) {
+
+                        // ...sets the beer as already in the list...
+                        alreadyInList = true;
+
+                        // ...and removes it if the bookmark has been removed
+                        if(jsonObject.getInt("value") == 0)
+                            bookmarksListID.remove(j);
+
+                    }
+                }
+
+                // Else, it is not already in the list and bookmarked
+                if(!alreadyInList && jsonObject.getInt("value") == 5)
+                    bookmarksListID.add(jsonObject.getInt("biere_id"));
+
+                // Reset the boolean to false
+                alreadyInList = false;
             }
         }
         catch(JSONException e) {}
