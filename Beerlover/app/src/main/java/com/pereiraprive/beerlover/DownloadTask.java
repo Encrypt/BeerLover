@@ -105,12 +105,11 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             }
 
             // Else, it's simply text, returns the content downloaded
-            else if(fileType.equals("TXT"))
+            else if(fileType.equals("TXT") || fileType.equals("JSON"))
                 result = readText(is, 1000);
 
             else if(fileType.equals("BTXT"))
                 result = readText(is, 20000);
-
 
         }
 
