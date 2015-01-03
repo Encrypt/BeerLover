@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Enregistrez-vous et conservez vos préférences !"
+        android:text="@string/register"
         android:id="@+id/message"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
@@ -23,14 +22,14 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="138dp"
-        android:hint="Email"
+        android:hint="@string/email"
         android:layout_below="@+id/message" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:inputType="textPersonName"
-        android:hint="Pseudo"
+        android:hint="@string/nickname"
         android:ems="10"
         android:id="@+id/nickname"
         android:layout_below="@+id/email"
@@ -39,7 +38,7 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Envoyer"
+        android:text="@string/send"
         android:id="@+id/button_send"
         android:onClick="Send"
         android:layout_centerHorizontal="true"

@@ -118,23 +118,43 @@ public class BeerDescription extends ActionBarActivity {
 
         // Retrieves the info
         try {
-
-            // Easily accessible info
             nameString = (String) webJson.get("name");
-            descriptionString = (String) webJson.get("description");
-            drinkerString = (String) webJson.get("buveur");
+        }
+        catch(JSONException e) {
+            nameString = "Inconnu";
+        }
 
-            // Country and picture
+        try {
+            descriptionString = (String) webJson.get("description");
+        }
+        catch(JSONException e) {
+            descriptionString = "Inconnue";
+        }
+
+        try {
+            drinkerString = (String) webJson.get("buveur");
+        }
+        catch(JSONException e) {
+            drinkerString = "Inconnu";
+        }
+
+        try {
             tmpJson = (JSONObject) webJson.get("country");
             originString = (String) tmpJson.get("name");
+        }
+        catch (JSONException e) {
+            originString = "Inconnue";
+        }
 
+        try {
             tmpJson = (JSONObject) webJson.get("image");
             tmpJson = (JSONObject) tmpJson.get("image");
             tmpJson = (JSONObject) tmpJson.get("thumb");
             pictureString = (String) tmpJson.get("url");
-
         }
         catch(JSONException e) {}
+
+
 
         // Gets the picture
         dlTask = new DownloadTask();

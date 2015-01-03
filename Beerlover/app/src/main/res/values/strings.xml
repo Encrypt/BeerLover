@@ -9,4 +9,8 @@
     <string name="no_entry">No entry!</string>
     <string name="filter">Filtrer</string>
     <string name="about">\?</string>
+    <string name="register">Enregistrez-vous et conservez vos préférences !</string>
+    <string name="email">Email</string>
+    <string name="nickname">Pseudo</string>
+    <string name="send">Envoyer</string>
 </resources>
