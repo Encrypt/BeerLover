@@ -24,7 +24,7 @@ import java.util.concurrent.ExecutionException;
 public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
-    private boolean isBookmarked = false, isUserAuth = false;
+    private boolean isBookmarked = false, isUserAuth = false, comesFromAuth = false;
     private TextView name, description, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
@@ -68,6 +68,23 @@ public class BeerDescription extends ActionBarActivity {
 
     }
 
+    // Method we have to call once the user created an account
+    protected void onResume() {
+        super.onResume();
+
+        // If the user comes from the Auth activity
+        if(comesFromAuth) {
+            
+            // Sets the boolean comesFromAuth as false
+            comesFromAuth = false;
+
+            // Tries to retrieve the token
+            tryToAuthUser();
+        }
+
+    }
+
+
     // Method called to retrieve and set the different elements in teh view
     private void fillBearInfo() {
 
@@ -97,9 +114,7 @@ public class BeerDescription extends ActionBarActivity {
         try {
             webJson = new JSONObject(webContent);
         }
-        catch(JSONException e){
-            // Nothing
-        }
+        catch(JSONException e) {}
 
         // Retrieves the info
         try {
@@ -263,6 +278,9 @@ public class BeerDescription extends ActionBarActivity {
 
         // Checks if the user has an account on the server
         if(!isUserAuth) {
+
+            // Sets the comesFromAth boolean
+            comesFromAuth = true;
 
             // Launches the UserAuth activity
             Intent i = new Intent(getApplicationContext(), UserAuth.class);
