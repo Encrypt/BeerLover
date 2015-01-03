@@ -1,6 +1,5 @@
 package com.pereiraprive.beerlover;
 
-import android.app.ProgressDialog;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

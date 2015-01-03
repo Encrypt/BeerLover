@@ -11,7 +11,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -42,7 +41,6 @@ public class DownloadTask extends AsyncTask<String, Void, String> {
             return downloadUrl();
 
         } catch (IOException e) {
-            System.out.println(e);
             return "Error while trying to download content";
         }
 

@@ -1,6 +1,5 @@
 package com.pereiraprive.beerlover;
 
-
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -16,7 +15,6 @@ import java.io.IOException;
 
 import java.util.concurrent.ExecutionException;
 
-
 public class UserAuth extends ActionBarActivity {
 
     private EditText email, nickname;
@@ -24,7 +22,7 @@ public class UserAuth extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Set the "beer_list" content
+        // Sets the "beer_list" content
         setContentView(R.layout.user_auth);
 
         // Retrieves the objects
@@ -63,9 +61,6 @@ public class UserAuth extends ActionBarActivity {
         userJson.put("nickname", nickname);
         userJson.put("email", email);
         json.put("user",userJson);
-
-        System.out.println(json);
-
         return json;
     }
 
@@ -87,8 +82,6 @@ public class UserAuth extends ActionBarActivity {
         try {
             webContent = dlTask.get();
         } catch (InterruptedException | ExecutionException e) {}
-
-        System.out.println("Token : " + webContent);
 
         // Tests if the id and token are retrievable
         try {

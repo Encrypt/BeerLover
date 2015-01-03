@@ -170,7 +170,8 @@ public class BeerDescription extends ActionBarActivity {
             byte[] encodeByte=Base64.decode(webContent, Base64.DEFAULT);
             pictureBitmap = BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
 
-        }catch(Exception e){}
+        }
+        catch(Exception e){}
 
         // Fills the TextViews & picture
         name.setText(nameString);
@@ -184,7 +185,7 @@ public class BeerDescription extends ActionBarActivity {
     // Sets the bookmark if the user is identified
     private void setBookmark() {
 
-        System.out.println("setBookmark ! / isUserAuth = " + isUserAuth);
+        // Tries to auth the user
         tryToAuthUser();
 
         // If the user is auth, does the job
@@ -204,8 +205,6 @@ public class BeerDescription extends ActionBarActivity {
                 webContent = dlTask.get();
             }
             catch(InterruptedException | ExecutionException e) {}
-
-            System.out.println(webContent);
 
             // Tries to find the current beer
             try {
