@@ -25,7 +25,7 @@ public class BeerDescription extends ActionBarActivity {
 
     // Needed variables for this view
     private boolean isBookmarked = false, isUserAuth = false, comesFromAuth = false;
-    private TextView name, description, origin, drinker;
+    private TextView name, description, type, origin, drinker;
     private ImageButton bookmarkButton;
     private ImageView beerImage;
     private int beerID, userID;
@@ -45,6 +45,7 @@ public class BeerDescription extends ActionBarActivity {
         // Retrieves the objects
         name = (TextView) findViewById(R.id.beerName);
         description = (TextView) findViewById(R.id.beerDescription);
+        type = (TextView) findViewById(R.id.beerType);
         origin = (TextView) findViewById(R.id.beerOrigin);
         drinker = (TextView) findViewById(R.id.beerDrinker);
         bookmarkButton = (ImageButton) findViewById(R.id.starButton);
@@ -95,6 +96,7 @@ public class BeerDescription extends ActionBarActivity {
         String nameString = new String();
         String descriptionString = new String();
         String originString = new String();
+        String typeString = new String();
         String drinkerString = new String();
         String pictureString = new String();
         Bitmap pictureBitmap = null;
@@ -118,39 +120,46 @@ public class BeerDescription extends ActionBarActivity {
 
         // Retrieves the info
         try {
-            nameString = (String) webJson.get("name");
+            nameString = webJson.getString("name");
         }
         catch(JSONException e) {
             nameString = "Inconnu";
         }
 
         try {
-            descriptionString = (String) webJson.get("description");
+            descriptionString = webJson.getString("description");
         }
         catch(JSONException e) {
             descriptionString = "Inconnue";
         }
 
         try {
-            drinkerString = (String) webJson.get("buveur");
+            typeString = webJson.getString("category");
+        }
+        catch(JSONException e) {
+            typeString = "Inconnu";
+        }
+
+        try {
+            drinkerString = webJson.getString("buveur");
         }
         catch(JSONException e) {
             drinkerString = "Inconnu";
         }
 
         try {
-            tmpJson = (JSONObject) webJson.get("country");
-            originString = (String) tmpJson.get("name");
+            tmpJson = webJson.getJSONObject("country");
+            originString = tmpJson.getString("name");
         }
         catch (JSONException e) {
             originString = "Inconnue";
         }
 
         try {
-            tmpJson = (JSONObject) webJson.get("image");
-            tmpJson = (JSONObject) tmpJson.get("image");
-            tmpJson = (JSONObject) tmpJson.get("thumb");
-            pictureString = (String) tmpJson.get("url");
+            tmpJson = webJson.getJSONObject("image");
+            tmpJson = tmpJson.getJSONObject("image");
+            tmpJson = tmpJson.getJSONObject("thumb");
+            pictureString = tmpJson.getString("url");
         }
         catch(JSONException e) {}
 
@@ -176,6 +185,7 @@ public class BeerDescription extends ActionBarActivity {
         // Fills the TextViews & picture
         name.setText(nameString);
         description.setText("Description : " + descriptionString);
+        type.setText("Type : " + typeString);
         origin.setText("Origine : " + originString);
         drinker.setText("Buveur : " + drinkerString);
         beerImage.setImageBitmap(pictureBitmap);
