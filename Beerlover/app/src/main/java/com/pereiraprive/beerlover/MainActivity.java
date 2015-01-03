@@ -20,7 +20,8 @@ import java.util.concurrent.ExecutionException;
 public class MainActivity extends ActionBarActivity {
 
     // Class objects
-    int randomNumbers[] = new int[5];
+    private int randomNumbers[] = new int[5];
+    private WorkingFragment workingFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,16 @@ public class MainActivity extends ActionBarActivity {
 
         // Fills the random list
         fillRandomList();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        // If the working fragment exists, destroys it
+        if(workingFragment != null)
+            workingFragment.dismiss();
 
     }
 
@@ -66,8 +77,9 @@ public class MainActivity extends ActionBarActivity {
     // Method to go to the list of beers
     public void displayBeerList(View v) {
 
-        // Creates a "Loading" window
-        ShowProgressRing();
+        // Created a WorkingFragment
+        workingFragment = new WorkingFragment();
+        workingFragment.show(getFragmentManager(), "test");
 
         // Displays the list of the beers
         Intent i = new Intent(getApplicationContext(), BeerList.class);
@@ -82,26 +94,6 @@ public class MainActivity extends ActionBarActivity {
         Intent i = new Intent(getApplicationContext(), MyBookmarks.class);
         startActivity(i);
 
-    }
-
-    // Method showing a progress ring while the BeerList is being processed
-    public void ShowProgressRing() {
-
-        final ProgressDialog ringProgressDialog = ProgressDialog.show(MainActivity.this, "Veuillez patienter", "Téléchargement et création de la liste", true);
-        ringProgressDialog.setCancelable(true);
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(1);
-
-                } catch (InterruptedException e) {
-                    ringProgressDialog.dismiss();
-                }
-            }
-
-        }).start();
     }
 
     // Method top fill the 5 last beer discoveries
