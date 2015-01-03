@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -61,6 +62,9 @@ public class BeerDescription extends ActionBarActivity {
 
         // Fills the objects (beer name, description, origin...)
         fillBearInfo();
+
+        // Sets the bookmark if the beer has bee bookmarked
+        setBookmark();
 
     }
 
@@ -142,71 +146,127 @@ public class BeerDescription extends ActionBarActivity {
 
     }
 
+    // Sets the bookmark if the user is identified
+    private void setBookmark() {
+
+        System.out.println("setBookmark ! / isUserAuth = " + isUserAuth);
+        tryToAuthUser();
+
+        // If the user is auth, does the job
+        if(isUserAuth) {
+
+            // Local objects
+            JSONArray jsonArray;
+            JSONObject jsonObject;
+            DownloadTask dlTask;
+            String webContent = new String();
+            int bookmarkValueTmp = 0;
+
+            // Retrieves the bookmarked beers
+            dlTask = new DownloadTask();
+            dlTask.execute("GET", "http://binouze.fabrigli.fr/notes.json?user[id=" + userID +"&user[token=" + userToken, "TXT");
+            try {
+                webContent = dlTask.get();
+            }
+            catch(InterruptedException | ExecutionException e) {}
+
+            System.out.println(webContent);
+
+            // Tries to find the current beer
+            try {
+
+                jsonArray = new JSONArray(webContent);
+
+                for(int i = 0 ; i < jsonArray.length() ; i++) {
+
+                    // Takes the next JSON Object
+                    jsonObject = jsonArray.getJSONObject(i);
+
+                    // If it's the current beer, saves the bookmark value
+                    if(jsonObject.getInt("biere_id") == beerID)
+                        bookmarkValueTmp = jsonObject.getInt("biere_id");
+
+                }
+
+            }
+            catch(JSONException e) {}
+
+            // Finally, sets the bookmark
+            if(bookmarkValueTmp == 0) {
+                isBookmarked = false;
+                bookmarkButton.setBackgroundResource(R.drawable.empty_star);
+            }
+
+            else {
+                isBookmarked = true;
+                bookmarkButton.setBackgroundResource(R.drawable.filled_star);
+            }
+
+        }
+
+    }
+
+    // Method to try to auth the user
+    private void tryToAuthUser() {
+
+        // Needed objects
+        JSONObject tokenJson = null;
+        String tmpString;
+
+        // Retrieves the file
+        FileInputStream saveFile = null;
+        boolean fileExists = true;
+
+        try {
+            saveFile = openFileInput("BeerloverToken.txt");
+        }
+        catch(FileNotFoundException e){
+            fileExists = false;
+        }
+
+        // Test if the file exists.
+        if(fileExists) {
+
+            // Changes the value of the isUserAuth boolean
+            isUserAuth = true;
+
+            // Retrieves the saved data
+            tmpString = "";
+            int c;
+
+            try {
+                while ((c = saveFile.read()) != -1) {
+                    tmpString = tmpString + Character.toString((char) c);
+                }
+            }
+            catch (IOException e) {}
+
+            // Retrieves the ID and token from the JSON
+            try {
+                tokenJson = new JSONObject(tmpString);
+                userID = tokenJson.getInt("id");
+                userToken = tokenJson.getString("token");
+            }
+            catch(JSONException e) {}
+
+        }
+
+    }
+
     // Method called once the button has been pressed
     private void bookmarkClick() {
 
-
+        // Local objects
         DownloadTask dlTask = new DownloadTask();
         String content;
         JSONObject json;
 
-
         // Checks if the user has an account on the server
         if(!isUserAuth) {
 
-            // Needed objects
-            JSONObject tokenJson = null;
-            String tmpString;
-
-            // Retrieves the file
-            FileInputStream saveFile = null;
-            boolean fileExists = true;
-
-            try {
-                saveFile = openFileInput("BeerloverToken.txt");
-            }
-            catch(FileNotFoundException e){
-                fileExists = false;
-            }
-
-            // Test if the file exists. If not, launch the UserAuth activity
-            if(!fileExists) {
-
-                // Launch the UserAuth activity
-                Intent i = new Intent(getApplicationContext(), UserAuth.class);
-                startActivity(i);
-
-            }
-
-            else {
-
-                // Changes the value of the isUserAuth boolean
-                isUserAuth = true;
-
-                // Retrieves the saved data
-                tmpString = "";
-                int c;
-
-                try {
-                    while ((c = saveFile.read()) != -1) {
-                        tmpString = tmpString + Character.toString((char) c);
-                    }
-                }
-                catch (IOException e) {}
-
-                // Retrieves the ID and token from the JSON
-                try {
-                    tokenJson = new JSONObject(tmpString);
-                    userID = tokenJson.getInt("id");
-                    userToken = tokenJson.getString("token");
-                }
-                catch(JSONException e) {}
-
-
-                // Calls the bookmarkClick method again
-                bookmarkClick();
-
-            }
+            // Launches the UserAuth activity
+            Intent i = new Intent(getApplicationContext(), UserAuth.class);
+            startActivity(i);
 
         }
 
@@ -257,7 +317,7 @@ public class BeerDescription extends ActionBarActivity {
     }
 
     // Converts the mark to a JSON object
-    public JSONObject setMarkAs (int value) throws JSONException {
+    public JSONObject setMarkAs(int value) throws JSONException {
 
         JSONObject json = new JSONObject();
         JSONObject userJson = new JSONObject();

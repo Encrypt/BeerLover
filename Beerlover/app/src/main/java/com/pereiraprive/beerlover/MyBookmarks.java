@@ -3,6 +3,8 @@ package com.pereiraprive.beerlover;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -22,6 +24,9 @@ public class MyBookmarks extends ActionBarActivity {
     private String userToken = null;
     private int userID;
     private boolean isUserAuth = false;
+    private ArrayList<Integer> bookmarksListID = new ArrayList<Integer>();
+    private ArrayList<String> bookmarksListName = new ArrayList<String>();
+    private ListView allBookmarks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,9 @@ public class MyBookmarks extends ActionBarActivity {
 
         // Set the content of the main activity
         setContentView(R.layout.bookmarks);
+
+        // Retrieves the ListView & User bookmarks
+        allBookmarks = (ListView) findViewById(R.id.allBookmarks);
 
     }
 
@@ -41,6 +49,10 @@ public class MyBookmarks extends ActionBarActivity {
         if(!isUserAuth)
             authUser();
 
+        // Empties the ArrayList
+        bookmarksListID.clear();
+        bookmarksListName.clear();
+
         // Fills the view
         fillView();
 
@@ -50,17 +62,11 @@ public class MyBookmarks extends ActionBarActivity {
     private void fillView() {
 
         // Local objects
-        ListView allBookmarks;
         DownloadTask dlTask;
         String webContent = new String();
         JSONObject jsonObject = null, tmpJson = null;
         JSONArray jsonArray = null;
-        ArrayList<String> bookmarksListName = new ArrayList<String>();
-        ArrayList<Integer> bookmarksListID = new ArrayList<Integer>();
         ArrayAdapter<String> bookmarksAdapter;
-
-        // Retrieves the ListView & User bookmarks
-        allBookmarks = (ListView) findViewById(R.id.allBookmarks);
 
         // Retrieves the bookmarked beers
         dlTask = new DownloadTask();
@@ -111,10 +117,32 @@ public class MyBookmarks extends ActionBarActivity {
         bookmarksAdapter = new ArrayAdapter<String>(this, R.layout.simple_list, bookmarksListName);
         allBookmarks.setAdapter(bookmarksAdapter);
 
+        // And adds a click listener
+        allBookmarks.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            // Method called once the bookmark button has been pressed
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View v, int position, long id) {
+                describeBeer(position);
+            }
+        });
+
+    }
+
+    // Method called when the users clicks on a Bookmarked Beer
+    private void describeBeer(int itemClicked) {
+
+        // Create a new intent & passes the beer ID
+        Intent intent = new Intent(getApplicationContext(),BeerDescription.class);
+        intent.putExtra("beerID", bookmarksListID.get(itemClicked));
+
+        // Starts the activity
+        startActivity(intent);
+
     }
 
     // Method to authenticate the user
-    public void authUser() {
+    private void authUser() {
 
         // Needed objects
         JSONObject tokenJson = null;
