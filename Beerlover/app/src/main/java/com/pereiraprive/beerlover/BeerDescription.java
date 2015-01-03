@@ -139,6 +139,8 @@ public class BeerDescription extends ActionBarActivity {
         catch(JSONException e) {
             typeString = "Inconnu";
         }
+        if(typeString.equals("null"))
+            typeString = "Inconnu";
 
         try {
             drinkerString = webJson.getString("buveur");
