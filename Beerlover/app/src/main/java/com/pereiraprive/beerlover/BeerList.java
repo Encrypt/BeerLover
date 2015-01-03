@@ -200,8 +200,6 @@ public class BeerList extends ActionBarActivity {
             // Retrieves all the beers from that category
             for(int j = 0 ; j < beerID.size() ; j++) {
 
-                // System.out.println("Valeur de beerID : " + beerID.get(j) + " / Valeur de tmpId : " + tmpId);
-
                 // If the given beer belongs to the category, adds it in the list (depends on the category)
                 if(filterApplied.get(j) == tmpId)
                     tmpList.add(beerName.get(j));
