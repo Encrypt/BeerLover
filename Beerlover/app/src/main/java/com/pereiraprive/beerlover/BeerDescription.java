@@ -74,7 +74,7 @@ public class BeerDescription extends ActionBarActivity {
 
         // If the user comes from the Auth activity
         if(comesFromAuth) {
-            
+
             // Sets the boolean comesFromAuth as false
             comesFromAuth = false;
 
