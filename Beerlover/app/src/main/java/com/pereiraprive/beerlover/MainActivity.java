@@ -1,6 +1,7 @@
 package com.pereiraprive.beerlover;
 
 import android.app.ProgressDialog;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -81,10 +82,16 @@ public class MainActivity extends ActionBarActivity {
         workingFragment = new WorkingFragment();
         workingFragment.show(getFragmentManager(), "test");
 
-        // Displays the list of the beers
-        Intent i = new Intent(getApplicationContext(), BeerList.class);
-        startActivity(i);
+        // Creates a handler to let the fragment display
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
 
+                // Displays the list of the beers
+                Intent i = new Intent(getApplicationContext(), BeerList.class);
+                startActivity(i);
+            }
+        }, 100);
     }
 
     // Method to go to the bookmarked beers
@@ -110,7 +117,7 @@ public class MainActivity extends ActionBarActivity {
         ListView fiveRandomBeers = (ListView) findViewById(R.id.fiveRandomBeers);
         String randomBeerName = new String();
 
-        // Generates random numbers (o avoid duplicates)
+        // Generates random numbers (to avoid duplicates)
         for(int i = 0; i < 5 ; i++) {
 
             // Reset the boolean
@@ -156,9 +163,7 @@ public class MainActivity extends ActionBarActivity {
                 webJson = new JSONObject(webContent);
                 randomBeerName = (String) webJson.get("name");
             }
-            catch(JSONException e){
-                // Nothing
-            }
+            catch(JSONException e) {}
 
             // Adds the beer to the list
             randomList.add(randomBeerName);
